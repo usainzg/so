@@ -15,7 +15,7 @@ typedef struct
  * - n_threads: numero de threads en el core.
  * - threads_arr: array de threads (thread_struct)
  **/
-typedef struct 
+typedef struct
 {
     unsigned int n_threads;
     thread_struct *threads_arr;
@@ -26,7 +26,7 @@ typedef struct
  * - n_cores: numero de cores en la cpu.
  * - cores_arr: array de los cores (core_struct).
  **/
-typedef struct  
+typedef struct
 {
     unsigned int n_cores;
     core_struct *cores_arr;

@@ -3,7 +3,7 @@
 #include "../include/queue.h"
 #include "../include/cpu.h"
 
-
-int main(int argc, char **argv) {
-
+int main(int argc, char **argv)
+{
+    
 }

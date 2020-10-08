@@ -1,75 +1,78 @@
+#include <stdio.h>
+#include <stdlib.h>
 #include "queue.h"
 
-pcb_queue *new_pcb_list() {
-    pcb_queue *list;
-    if(!(list = malloc(sizeof(pcb_queue)))) return NULL;
-    list->head = NULL;
-    list->tail = NULL;
-    list->len = 0;
-    return list;
+Queue *make_queue()
+{
+    Queue *queue = malloc(sizeof(Queue));
+    if (!queue)
+        return NULL;
+    queue->head = NULL;
+    return queue;
 }
 
-void display(pcb_queue *list) {
-	printf("%s: ", __FUNCTION__);
-	pcb_queue_node *cur = list->head;
-	if (list->head == NULL) {
-		assert(list->tail == NULL);
-		printf("Empty queue \n");
-		return;
-	}
-	while(cur != NULL) {
-		printf("%d ", cur->pcb);
-		cur = cur->next;
-	}
-	printf("\n");
-	return;
+int q_is_empty(Queue *q)
+{
+    return (q->head == NULL) ? 1 : 0;
 }
 
-pcb_queue_node *queue_push(pcb_queue *queue, pcb_queue_node *node) {
-  if (!node) return NULL;
-
-  if (queue->len) {
-    node->prev = queue->tail;
-    node->next = NULL;
-    queue->tail->next = node;
-    queue->tail = node;
-  } else {
-    queue->head = queue->tail = node;
-    node->prev = node->next = NULL;
-  }
-
-  ++queue->len;
-  return node;
+void q_insert(pcb_struct pcb, Queue *q)
+{
+    Node *temp;
+    temp = (struct node *)malloc(sizeof(struct node));
+    if (temp == NULL)
+    {
+        printf("Queue is not Allocated\n");
+        return;
+    }
+    temp->pcb = pcb;
+    temp->next = NULL;
+    if (q->head == NULL)
+    {
+        q->head = temp;
+    }
+    else
+    {
+        q->tail->next = temp;
+    }
+    q->tail = temp;
 }
 
-pcb_queue_node *queue_pop_last(pcb_queue *queue) {
-  if (!queue->len) return NULL;
-
-  pcb_queue_node *node = queue->tail;
-
-  if (--queue->len) {
-    (queue->tail = node->prev)->next = NULL;
-  } else {
-    queue->tail = queue->head = NULL;
-  }
-
-  node->next = node->prev = NULL;
-  return node;
+pcb_struct q_delete_node(Queue *q)
+{
+    Node *temp;
+    pcb_struct pcb;
+    if (q_is_empty(q))
+    {
+        printf("Queue is Empty\n");
+        exit(1);
+    }
+    temp = q->head;
+    pcb = temp->pcb;
+    q->head = q->head->next;
+    free(temp);
+    return pcb;
 }
 
-pcb_queue_node *queue_pop_first(pcb_queue *queue) {
-  if (!queue->len) return NULL;
-
-  pcb_queue_node *node = queue->head;
-
-  if (--queue->len) {
-    (queue->head = node->next)->prev = NULL;
-  } else {
-    queue->head = queue->tail = NULL;
-  }
-
-  node->next = node->prev = NULL;
-  return node;
+pcb_struct q_peek(Queue *q)
+{
+    if (q_is_empty(q))
+    {
+        printf("Queue is Empty\n");
+        exit(1);
+    }
+    return q->head->pcb;
 }
 
-
+void q_destroy(Queue *queue)
+{
+    Node *current = queue->head;
+    Node *next = current;
+    while (current != NULL)
+    {
+        next = current->next;
+        free(current);
+        current = next;
+    }
+    free(queue);
+}

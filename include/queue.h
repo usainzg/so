@@ -1,21 +1,28 @@
-#include <unistd.h>
-#include "pcb.h"
 #ifndef QUEUE_H
 #define QUEUE_H
 
-typedef struct
+#include "pcb.h"
+
+typedef struct node Node;
+typedef struct queue Queue;
+
+struct node
 {
-    struct pcb_queue_node *next, *prev;
     pcb_struct pcb;
-} pcb_queue_node;
+    struct node *next;
+};
 
-typedef struct 
+struct queue
 {
-    pcb_queue_node *head, *tail;
-    unsigned int len;
-} pcb_queue;
+    Node *head, *tail;
+};
 
-pcb_queue *new_pcb_list();
-void display_queue();
+Queue *make_queue();
+void q_insert(pcb_struct pcb, Queue *q);
+pcb_struct q_delete_node(Queue *q);
+pcb_struct q_peek(Queue *q);
+void q_destroy(Queue *q);
+
+int q_is_empty(Queue *q);
 
 #endif

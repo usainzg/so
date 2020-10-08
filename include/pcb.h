@@ -1,10 +1,9 @@
-#include <unistd.h>
 #ifndef PCB_H
 #define PCB_H
 
-typedef struct 
+typedef struct
 {
-    pid_t pid;
+    unsigned int pid;
 
     int prio;
     int state; // new, ready, waiting, executing, terminated, blocked, suspended...

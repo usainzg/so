@@ -9,7 +9,7 @@ Repo para la asignatura de Sistemas Operativos (UPV/EHU).
 - -O \<...> para elegir el número de cores de las CPU.
 - -T \<...> para elegir el número de threads por cada core.
 
-En caso de no espeficicar alguno de los parametros mediante las opciones listadas, se aplicarán los datos por defecto en los parámetros no seteados.
+En caso de no especificar alguno de los parámetros mediante las opciones listadas, se aplicarán los datos por defecto en los parámetros no seteados.
 
 # Datos por defecto del sistema:
 - Frecuencia del reloj del sistema (clock): 

@@ -1,11 +1,14 @@
 #include <stdio.h>
 #include <unistd.h>
+#include <pthread.h>
 #include "../include/pcb.h"
 #include "../include/queue.h"
 #include "../include/cpu.h"
 
 int main(int argc, char **argv)
 {
+    
+
     int i;
     extern char *optarg;
     extern int optind, optopt;

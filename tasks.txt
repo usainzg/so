@@ -1,0 +1,11 @@
+- Crear estructura basica -> 
+- Crear los threads (clock, timer, process gen, sceduler) ->
+- Organizar: https://calvinkam.github.io/csci3150-Fall17-lab3/gcc.html
+- Funciones de la cola:
+    - New list ->
+    - Push -> 
+    - Pop ->
+    - len? ->
+    - display ->
+- Configurar el Makefile ->
+- Extern? -> https://stackoverflow.com/questions/1433204/how-do-i-use-extern-to-share-variables-between-source-files

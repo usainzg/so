@@ -110,5 +110,25 @@ void print_system_params()
 
 void create_system_structure()
 {
+    int i, j, z;
+    system_cpu.cpus_arr = malloc(sizeof(cpu_struct) * system_cpu.n_cpus);
 
+    for (i = 0; i < system_cpu.n_cpus; i++)
+    {
+        system_cpu.cpus_arr[i].n_cores = cpus.n_cores;
+        system_cpu.cpus_arr[i].cores_arr = malloc(sizeof(core_struct) * cpus.n_cores);
+
+        for (j = 0; j < cpus.n_cores; j++)
+        {
+            system_cpu.cpus_arr[i].cores_arr[j].n_threads = cores.n_threads;
+            system_cpu.cpus_arr[i].cores_arr[j].threads_arr = malloc(sizeof(thread_struct) * cores.n_threads);
+
+            for (z = 0; z < cores.n_threads; z++)
+            {
+                system_cpu.cpus_arr[i].cores_arr[j].threads_arr[z].thread_id = z;
+
+                printf("CPU: %d, core: %d, thread: %d\n", i, j, z);
+            }
+        }
+    }
 }

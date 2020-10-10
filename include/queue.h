@@ -22,7 +22,6 @@ void q_insert(pcb_struct pcb, Queue *q);
 pcb_struct q_delete_node(Queue *q);
 pcb_struct q_peek(Queue *q);
 void q_destroy(Queue *q);
-
 int q_is_empty(Queue *q);
 
 #endif

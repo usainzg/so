@@ -3,11 +3,11 @@
 
 typedef struct
 {
-    unsigned int pid;
+    int pid;
 
     int prio;
     int state; // new, ready, waiting, executing, terminated, blocked, suspended...
-    unsigned int life_time;
+    int life_time;
 } pcb_struct;
 
 #endif

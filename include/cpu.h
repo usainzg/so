@@ -7,7 +7,7 @@
  **/
 typedef struct
 {
-    unsigned int thread_id;
+    int thread_id;
 } thread_struct;
 
 /**
@@ -17,7 +17,7 @@ typedef struct
  **/
 typedef struct
 {
-    unsigned int n_threads;
+    int n_threads;
     thread_struct *threads_arr;
 } core_struct;
 
@@ -28,7 +28,7 @@ typedef struct
  **/
 typedef struct
 {
-    unsigned int n_cores;
+    int n_cores;
     core_struct *cores_arr;
 } cpu_struct;
 
@@ -39,7 +39,7 @@ typedef struct
  **/
 typedef struct
 {
-    unsigned int n_cpus;
+    int n_cpus;
     cpu_struct *cpus_arr;
 } system_cpus_struct;
 

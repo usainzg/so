@@ -1,20 +1,50 @@
 #include <stdio.h>
 #include <unistd.h>
+#include <stdlib.h>
 #include <pthread.h>
 #include "../include/pcb.h"
 #include "../include/queue.h"
 #include "../include/cpu.h"
+#include "workers/process_gen.h"
+
+extern char *optarg;
+extern int optind, optopt;
+
+/**
+ * Variables globales para guardar la informacion
+ * de los parametros del sistema
+ **/
+int freq_clock = 1000; // MHz => 1 GHz
+int period_timer = 1; // periodo de 1ns, 1 ciclo por cada 1ns
+int freq_process_generator = 1;
+system_cpus_struct system_cpu;
+cpu_struct cpus;
+core_struct cores;
+
+void init_system_defaults();
+void get_system_params();
+void print_system_params();
+void create_system_structure();
 
 int main(int argc, char **argv)
 {
-    
+    init_system_defaults();
+    get_system_params(argc, argv);
+    print_system_params();
+    create_system_structure();
+}
 
+void init_system_defaults()
+{
+    system_cpu.n_cpus = 1;
+    cpus.n_cores = 1;
+    cores.n_threads = 1;
+}
 
+void get_system_params(int argc, char **argv)
+{
     int i;
-    extern char *optarg;
-    extern int optind, optopt;
-
-    while (1) {
+     while (1) {
         char c;
 
         c = getopt (argc, argv, "c:t:p:C:O:T:");
@@ -24,22 +54,28 @@ int main(int argc, char **argv)
         }
         switch (c) {
         case 'c':
-            printf ("User has invoked with -c %s.\n", optarg);
+            printf ("Frecuencia del clock => -c %s.\n", optarg);
+            freq_clock = atoi(optarg);
             break;
         case 't':
-            printf ("User has invoked with -t %s.\n", optarg);
+            printf ("Periodo de tiempo del timer => -t %s.\n", optarg);
+            period_timer = atoi(optarg);
             break;
         case 'p':
-            printf ("User has invoked with -p %s.\n", optarg);
+            printf ("Frecuencia process generator => -p %s.\n", optarg);
+            freq_process_generator = atoi(optarg);
             break;
         case 'C':
-            printf ("User has invoked with -C %s.\n", optarg);
+            printf ("Numero CPUs => -C %s.\n", optarg);
+            system_cpu.n_cpus = atoi(optarg);
             break;
         case 'O':
-            printf ("User has invoked with -O %s.\n", optarg);
+            printf ("Numero de cores => -O %s.\n", optarg);
+            cpus.n_cores = atoi(optarg);
             break;
         case 'T':
-            printf ("User has invoked with -T %s.\n", optarg);
+            printf ("Numero de threads => -T %s.\n", optarg);
+            cores.n_threads = atoi(optarg);
             break;
         case '?':
         default:
@@ -58,4 +94,21 @@ int main(int argc, char **argv)
             printf ("    Argument %d: '%s'\n", i + 1, argv[i]);
         }
     }
+}
+
+void print_system_params()
+{
+    printf("---------------------------\n");
+    printf(" => freq_clock: %d\n", freq_clock);
+    printf(" => period_timer: %d\n", period_timer);
+    printf(" => freq_proc_gen: %d\n", freq_process_generator);
+    printf(" => CPUs: %d\n", system_cpu.n_cpus);
+    printf(" => cores_per_cpu: %d\n", cpus.n_cores);
+    printf(" => threads_per_core: %d\n", cores.n_threads);
+    printf("---------------------------\n");
+}
+
+void create_system_structure()
+{
+
 }

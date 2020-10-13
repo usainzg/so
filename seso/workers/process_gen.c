@@ -8,17 +8,17 @@
 pcb_struct generate_pcb(int last_pid)
 {
     pcb_struct new_pcb;
-    new_pcb.pid = last_pid + 1;
-
+    last_pid += 1;
+    new_pcb.pid = last_pid;
+    new_pcb.life_time = rand() % 10000;
     return new_pcb;
 }
 
 void *process_generator(void *queue)
 {
-    printf("Entrando al thread creador de procesos...\n");
+    printf("INFO: Entrando al thread creador de procesos...\n");
     Queue *q;
     q = (Queue*) queue;
-    printf("q len_init: %d\n", q->len);
     pcb_struct new_pcb;
     int pid = 2;
     while(1) {
@@ -26,6 +26,6 @@ void *process_generator(void *queue)
         new_pcb = generate_pcb(pid);
         pid += 1;
         q_insert(new_pcb, q);
-        printf("New: %d, Peek: %d, Length: %d\n", new_pcb.pid, q_peek(q).pid, q->len);
+        printf("new_pid: %d, life_time: %d, q_len: %d\n", new_pcb.pid, new_pcb.life_time, q->len);
     }
 }

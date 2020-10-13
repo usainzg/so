@@ -15,6 +15,7 @@ struct node
 struct queue
 {
     Node *head, *tail;
+    int len;
 };
 
 Queue *make_queue();

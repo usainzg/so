@@ -4,5 +4,6 @@
 #include "../../include/pcb.h"
 
 pcb_struct generate_pcb(int last_pid);
+void *process_generator(void *queue);
 
 #endif

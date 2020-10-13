@@ -8,6 +8,7 @@ Queue *make_queue()
     if (!queue)
         return NULL;
     queue->head = NULL;
+    queue->len = 0;
     return queue;
 }
 
@@ -36,6 +37,7 @@ void q_insert(pcb_struct pcb, Queue *q)
         q->tail->next = temp;
     }
     q->tail = temp;
+    q->len++;
 }
 
 pcb_struct q_delete_node(Queue *q)
@@ -51,6 +53,7 @@ pcb_struct q_delete_node(Queue *q)
     pcb = temp->pcb;
     q->head = q->head->next;
     free(temp);
+    q->len--;
     return pcb;
 }
 

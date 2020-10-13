@@ -42,23 +42,6 @@ int main(int argc, char **argv)
     pthread_join(process_gen, NULL);
 }
 
-void *process_generator(void *queue)
-{
-    printf("Entrando al thread...\n");
-    Queue *q = (Queue*)queue;
-    pcb_struct new_pcb;
-    int pid = 0;
-    while(1) {
-        sleep(1);
-        printf("HOLA");
-        new_pcb = generate_pcb(pid);
-        pid += 1;
-        printf("New: %d", new_pcb.pid);
-        q_insert(new_pcb, q);
-        printf("Peek: %d", q_peek(q).pid);
-    }
-}
-
 void init_system_defaults()
 {
     system_cpu.n_cpus = 1;

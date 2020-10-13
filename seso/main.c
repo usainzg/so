@@ -25,11 +25,11 @@ void init_system_defaults();
 void get_system_params();
 void print_system_params();
 void create_system_structure();
-void *process_generator(void *queue);
+void *clock_worker();
 
 int main(int argc, char **argv)
 {
-    Queue *q = make_queue();
+    Queue *process_queue = make_queue();
     pthread_t clock, timer, process_gen, sched;
 
     init_system_defaults();
@@ -37,9 +37,18 @@ int main(int argc, char **argv)
     print_system_params();
     create_system_structure();
 
-    pthread_create(&process_gen, NULL, process_generator, (void*) q);
+    pthread_create(&clock, NULL, clock_worker, NULL);
+    pthread_create(&process_gen, NULL, process_generator, (void*) process_queue);
 
+    pthread_join(clock, NULL);
     pthread_join(process_gen, NULL);
+
+}
+
+void *clock_worker()
+{
+
+
 }
 
 void init_system_defaults()

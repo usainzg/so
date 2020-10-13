@@ -25,13 +25,38 @@ void init_system_defaults();
 void get_system_params();
 void print_system_params();
 void create_system_structure();
+void *process_generator(void *queue);
 
 int main(int argc, char **argv)
 {
+    Queue *q = make_queue();
+    pthread_t clock, timer, process_gen, sched;
+
     init_system_defaults();
     get_system_params(argc, argv);
     print_system_params();
     create_system_structure();
+
+    pthread_create(&process_gen, NULL, process_generator, (void*) q);
+
+    pthread_join(process_gen, NULL);
+}
+
+void *process_generator(void *queue)
+{
+    printf("Entrando al thread...\n");
+    Queue *q = (Queue*)queue;
+    pcb_struct new_pcb;
+    int pid = 0;
+    while(1) {
+        sleep(1);
+        printf("HOLA");
+        new_pcb = generate_pcb(pid);
+        pid += 1;
+        printf("New: %d", new_pcb.pid);
+        q_insert(new_pcb, q);
+        printf("Peek: %d", q_peek(q).pid);
+    }
 }
 
 void init_system_defaults()

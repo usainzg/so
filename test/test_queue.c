@@ -32,7 +32,7 @@ int main(int argc, char **argv)
         ptr = ptr->next;
     }
 
-    printf("Peek PID: %d\n", q_peek(q));
+    printf("Peek PID: %d\n", q_peek(q).pid);
     
     q_delete_node(q);
     q_delete_node(q);

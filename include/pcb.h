@@ -4,10 +4,12 @@
 typedef struct
 {
     int pid;
+    enum Status { idle, ready, running, preempted, waiting } status;
 
-    int prio;
-    int state; // new, ready, waiting, executing, terminated, blocked, suspended...
-    int life_time;
+    int quantum;
+    int finishing_time;
+    int curr_cpu_time_run;
+    int curr_waiting_time;
 } pcb_struct;
 
 #endif

@@ -9,3 +9,8 @@
     - display ->
 - Configurar el Makefile ->
 - Extern? -> https://stackoverflow.com/questions/1433204/how-do-i-use-extern-to-share-variables-between-source-files
+
+- Scheduler:
+    - https://github.com/loongson-community/linux-loongson-community/blob/178edb798ab6d9586f1673009e9ee933d251a285/Documentation/scheduler/sched-BFS.txt
+    - https://github.com/YasminBeatriz/Round-Robin-Process-Scheduling-Simulation
+    

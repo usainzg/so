@@ -3,6 +3,8 @@
 
 #include "pcb.h"
 
+#define Q_MAX_LEN 20
+
 typedef struct node Node;
 typedef struct queue Queue;
 

@@ -3,6 +3,8 @@
 
 #include "../../include/pcb.h"
 
+#define QUANTUM 5
+
 pcb_struct generate_pcb(int last_pid);
 void *process_generator(void *queue);
 

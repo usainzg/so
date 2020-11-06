@@ -51,7 +51,7 @@ int main(int argc, char **argv)
 
     pthread_create(&clock, NULL, clock_worker, &cycles_timer);
     pthread_create(&timer, NULL, timer_worker, NULL);
-    pthread_create(&sched, NULL, sched_worker, NULL);
+    pthread_create(&sched, NULL, sched_worker, (void *)process_queue);
     pthread_create(&process_gen, NULL, process_generator, (void *)process_queue);
 
     pthread_join(clock, NULL);

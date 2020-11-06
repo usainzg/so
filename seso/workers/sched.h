@@ -5,6 +5,4 @@
 
 void *sched_worker();
 
-void round_robin();
-
 #endif

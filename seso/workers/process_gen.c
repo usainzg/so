@@ -23,6 +23,13 @@ void *process_generator(void *queue)
     pcb_struct new_pcb;
     int pid = 2;
     int gen_random_factor = 0;
+
+    new_pcb = generate_pcb(pid);
+    pid += 1;
+    new_pcb.quantum = QUANTUM;
+    q_insert(new_pcb, q);
+    printf("new_pid: %d, life_time: %d, quantum: %d, q_len: %d\n", new_pcb.pid, new_pcb.finishing_time, new_pcb.quantum, q->len);
+
     while(1) {
         gen_random_factor = rand() % 10;
         sleep(1.0 + gen_random_factor); // entre 1-9s

@@ -2,19 +2,24 @@
 #include <semaphore.h>
 #include <stdio.h>
 #include "clock.h"
+#include "helpers.h"
 
-void *clock_worker(void *cycles)
+extern sem_t cpu_sem, timer_sem;
+
+int c = 100;
+
+void *clock_worker()
 {
-    int c = *(int*)cycles;
-    extern sem_t clock_sem, timer_sem;
-
     while (1)
     {
-        sleep(0.10);
-        sem_wait(&timer_sem);
-        
-        sleep(0.0001 * c);
-        
-        sem_post(&clock_sem);
+        do
+        {
+            sem_down_t(&cpu_sem);
+            // step
+            sem_up_t(&cpu_sem);
+            c += 1;
+        } while (c < 100);
+        c = 0;
+        sem_up_t(&timer_sem);
     }
 }

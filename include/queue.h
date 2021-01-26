@@ -1,30 +1,21 @@
 #ifndef QUEUE_H
 #define QUEUE_H
 
-#include "pcb.h"
+#include "task.h"
 
-#define Q_MAX_LEN 20
-
-typedef struct node Node;
-typedef struct queue Queue;
-
-struct node
+typedef struct
 {
-    pcb_struct pcb;
-    struct node *next;
-};
+    int head, tail;
+    int len, max_len;
+    Task *task;
+} Queue;
 
-struct queue
-{
-    Node *head, *tail;
-    int len;
-};
-
-Queue *make_queue();
-void q_insert(pcb_struct pcb, Queue *q);
-pcb_struct q_delete_node(Queue *q);
-pcb_struct q_peek(Queue *q);
-void q_destroy(Queue *q);
-int q_is_empty(Queue *q);
+void make_queue();
+int q_size();
+int q_is_empty();
+int q_is_full();
+Task q_peek();
+void q_insert(Task t);
+Task q_delete_node();
 
 #endif

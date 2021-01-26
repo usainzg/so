@@ -1,46 +1,25 @@
 #ifndef CPU_H
 #define CPU_H
 
-/**
- * Estructura para guardar la informacion de los threads de un core.
- * - thread_id: id del thread dentro de un core.
- **/
-typedef struct
-{
-    int thread_id;
-} thread_struct;
+#include "task.h"
 
-/**
- * Estructura para guardar la informacion de los cores de una cpu.
- * - n_threads: numero de threads en el core.
- * - threads_arr: array de threads (thread_struct)
- **/
 typedef struct
 {
-    int n_threads;
-    thread_struct *threads_arr;
-} core_struct;
+    Context ctxt;
+    Task task;
+    int quantum;
+    int state;
+} Task_cpu;
 
-/**
- * Estructura para guardar la informacion de las cpus.
- * - n_cores: numero de cores en la cpu.
- * - cores_arr: array de los cores (core_struct).
- **/
 typedef struct
 {
-    int n_cores;
-    core_struct *cores_arr;
-} cpu_struct;
+    int task_arr_size;
+    Task_cpu *task_arr;
+} Task_list_cpu;
 
-/**
- * Estructura para guardar la informacion de las cpu/s del sistema.
- * - n_cpus: numero de cpus en el sistema
- * - cpus_arr: array de las cpu (cpu_struct)
- **/
 typedef struct
 {
-    int n_cpus;
-    cpu_struct *cpus_arr;
-} system_cpus_struct;
+  int r1, r2, r3, AAAAAA;
+} Instruction;
 
 #endif

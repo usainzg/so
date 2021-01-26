@@ -1,81 +1,64 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "queue.h"
+#include "helpers.h"
 
-Queue *make_queue()
+int Q_MAX = 25;
+
+Queue q;
+
+void make_queue()
 {
-    Queue *queue = malloc(sizeof(Queue));
-    if (!queue)
-        return NULL;
-    queue->head = NULL;
-    queue->len = 0;
-    return queue;
+    q.task = malloc(sizeof(Task) * Q_MAX);
+    q.head = 0;
+    q.tail = -1;
+    q.len = 0;
+    q.max_len = Q_MAX;
+    print_info("Init de Q.", 1);
 }
 
-int q_is_empty(Queue *q)
+int q_size()
 {
-    return (q->head == NULL) ? 1 : 0;
+    return q.len;
 }
 
-void q_insert(pcb_struct pcb, Queue *q)
+int q_is_empty()
 {
-    Node *temp;
-    temp = (struct node *)malloc(sizeof(struct node));
-    if (temp == NULL)
-    {
-        printf("Queue is not Allocated\n");
-        return;
-    }
-    temp->pcb = pcb;
-    temp->next = NULL;
-    if (q->head == NULL)
-    {
-        q->head = temp;
-    }
-    else
-    {
-        q->tail->next = temp;
-    }
-    q->tail = temp;
-    q->len++;
+    return (q.len == 0) ? 1 : 0;
 }
 
-pcb_struct q_delete_node(Queue *q)
+int q_is_full()
 {
-    Node *temp;
-    pcb_struct pcb;
-    if (q_is_empty(q))
-    {
-        printf("Queue is Empty\n");
-        exit(1);
-    }
-    temp = q->head;
-    pcb = temp->pcb;
-    q->head = q->head->next;
-    free(temp);
-    q->len--;
-    return pcb;
+    return (q.len == q.max_len) ? 1 : 0;
 }
 
-pcb_struct q_peek(Queue *q)
+Task q_peek()
 {
-    if (q_is_empty(q))
-    {
-        printf("Queue is Empty\n");
-        exit(1);
-    }
-    return q->head->pcb;
+    return q.task[q.head];
 }
 
-void q_destroy(Queue *queue)
+void q_insert(Task t)
 {
-    Node *current = queue->head;
-    Node *next = current;
-    while (current != NULL)
+    if (!q_is_full())
     {
-        next = current->next;
-        free(current);
-        current = next;
+        if (q.max_len == q.tail+1) q.tail = -1;
+        q.tail += 1;
+        q.task[q.tail] = t;
+        q.len += 1;
     }
-    free(queue);
+}
+Task q_delete_node()
+{
+    Task t;
+    t.pid = -1;
+    if (q.len > 0)
+    {
+        t = q.task[q.head];
+        q.head += 1;
+
+        if (q.head == q.max_len) q.head = 0;
+
+        q.len -= 1;
+    }
+    return t;
 }

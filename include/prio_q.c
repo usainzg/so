@@ -46,20 +46,76 @@ int priority_q_len()
 
 void priority_q_normalize()
 {
+    struct Node *n;
+    int i, tmp, len;
 
+    n = head;
+    len = priority_q_len();
+
+    for (i = 0; i < len-1; i++) 
+    {
+        n = n->next_node;
+    }
+
+    if (n->order_info < 0) 
+    {
+        tmp = -(n->order_info + (n->order_info/2));
+    }
+    
+    n = head;
+    for (i = 0; i < len; i++)
+    {
+        n->order_info += tmp;
+        n = n->next_node;
+    }
 }
+
 void priority_q_sort()
 {
+    struct Node *next, *cur;
+    Task tmpT;
+    Context tmpCtxt;
+    int i, j, i_m, ord_info, len;
 
+    len = priority_q_len();
+    i_m = len;
+
+    for (i = 0; i < len-1; i++, i_m--)
+    {
+        cur = head;
+        next = head->next_node;
+
+        for (j = 1; j < i_m; j++)
+        {
+            if (cur->order_info < next->order_info)
+            {
+                // swap de order_info cur <-> next
+                ord_info = cur->order_info;
+                cur->order_info = next->order_info;
+                next->order_info = ord_info;
+
+                // swap de context cur <-> next
+                tmpCtxt = cur->context;
+                cur->context = next->context;
+                next->context = tmpCtxt;
+
+                // swap de task cur <-> next
+                tmpT = cur->task;
+                cur->task = next->task;
+                next->task = tmpT;
+            }
+            cur = cur->next_node;
+            next = next->next_node;
+        }
+    }
 }
 
 void priority_q_print()
 {
-    int i, pid;
+    int i = 0, pid;
     struct Node *c = head;
     int len = priority_q_len();
     printf("[ ");
-    i = 0;
     while (i < len)
     {
         pid = c->task.pid;

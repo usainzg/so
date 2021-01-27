@@ -6,7 +6,7 @@
 /**
  * Definicion de todos los semaforos necesarios.
  **/
-sem_t timer_sem, cpu_sem, ram_sem, pageT_sem, q_sem, oQ_sem;
+sem_t timer_sem, cpu_sem, ram_sem, pageT_sem, q_sem, ord_q_sem;
 
 /**
  * Funcion para imprimir info por pantalla

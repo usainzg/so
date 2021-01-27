@@ -1,59 +1,48 @@
 #include <stdio.h>
 #include <semaphore.h>
+#include <pthread.h>
+#include <unistd.h>
 #include "sched.h"
-#include "../../include/helpers.h"
-#include "../../include/queue.h"
+#include "task.h"
+#include "queue.h"
+#include "helpers.h"
+#include "cpu.h"
+#include "prio_q.h"
 
-#define QUANTUM_COUNT 2
+pthread_t dispatch_worker;
 
-void scheduler(Queue *q, int quantum_count);
-void dispatcher();
+extern sem_t q_sem, cpu_sem;
+extern Cpu *system_cpus;
+extern int CPUS, t;
 
-pcb_struct exec_p;
-
-void *sched_worker(void *queue)
+void *dispatcher()
 {
-    extern sem_t sched_sem;
-    int quantum_count = QUANTUM_COUNT;
-    Queue *q;
-    q = (Queue *)queue;
+    Context ctxt;
+    Task task;
 
-    exec_p.pid = -1;
-
-    while (1)
+    while(1)
     {
-        sem_wait(&sched_sem);
-
-        print_info("scheduler alertado desde el timer!", 1);
-        quantum_count -= 1;
-        printf(" => ...q_restante: %d...\n", quantum_count);
-        if (quantum_count == 0)
+        if (!q_is_empty())
         {
-            print_info("quantum acabado, llamando a scheduler...", 1);
-            quantum_count = 2;
-            scheduler(q, quantum_count);
+            sem_down_t(&q_sem);
+            task = q_delete_node();
+            sem_up_t(&q_sem); // TODO: eliminar estos helpers???
+            
+            ctxt.pc = task.mm.code;
+            
+            sem_down_t(&ord_q_sem);
+            priority_q_insert(task, ctxt, task.priority);
+            sem_up_t(&ord_q_sem);
         }
     }
 }
 
-void scheduler(Queue *q, int quantum_count)
+void scheduler()
 {
-    if (!q_is_empty(q))
-    {
-        pcb_struct last_p = exec_p;
 
-        exec_p = q_delete_node(q);
-        printf("SCHED: next process_pid exec: %d\n", exec_p.pid);
-
-        // mutex
-        if (last_p.pid != -1)
-            q_insert(last_p, q);
-    }
-
-    dispatcher();
 }
 
-void dispatcher()
+void* sched_worker()
 {
-    print_info("DISP: mete proceso a ejecutar", 1);
+    
 }

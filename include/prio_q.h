@@ -12,7 +12,7 @@ struct Node
 };
 
 void priority_q_insert(Task t, Context ctxt, int info);
-void priority_q_delete_first(Context *ctxt, int *nice);
+Task priority_q_delete_first(Context *ctxt, int *nice);
 int priority_q_is_empty();
 int priority_q_len();
 

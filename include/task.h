@@ -4,9 +4,6 @@
 #include <sys/time.h>
 #include "mem.h"
 
-#define WORKING_TASK 0
-#define STOPPED_TASK 1
-
 typedef struct
 {
     struct timeval start_time;

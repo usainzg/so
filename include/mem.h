@@ -18,7 +18,7 @@ typedef struct
 {
     int code;
     int data;
-    Pgb pgb;
+    PGB pgb;
 } MM;
 
 #endif

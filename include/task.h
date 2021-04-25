@@ -17,7 +17,7 @@ typedef struct
 {
     int pc;
     int rg[16];
-    int cmp;
+    int cc;
 } Context;
 
 #endif

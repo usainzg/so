@@ -44,5 +44,13 @@ void scheduler()
 
 void* sched_worker()
 {
-    
+    pthread_create(&dispatch_worker, NULL, dispatcher, NULL);
+    while (1)
+    {
+        if (t >= 1)
+        {
+            t = 0;
+            scheduler();
+        }
+    }
 }

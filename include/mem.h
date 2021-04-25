@@ -12,7 +12,7 @@ typedef struct
     Pages *data;
     int count;
     int size;
-} Pgb;
+} PGB;
 
 typedef struct
 {

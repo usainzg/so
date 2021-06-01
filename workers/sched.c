@@ -6,8 +6,9 @@
 #include "task.h"
 #include "queue.h"
 #include "helpers.h"
-#include "cpu.h"
 #include "prio_q.h"
+#include "../include/cpu.h"
+#include "../include/pgb.h"
 
 pthread_t dispatch_worker;
 
@@ -77,7 +78,7 @@ void scheduler()
             }
             else
             {
-                pgb_delete(&tcpu.task.mm.pgb);
+                remove_pgb(&tcpu.task.mm.pgb);
 
                 gettimeofday(&ended_at, 0);
                 t_lived = (ended_at.tv_sec - tcpu.task.start_time.tv_sec) + (ended_at.tv_usec - tcpu.task.start_time.tv_usec) / 1e6;
@@ -101,7 +102,7 @@ void scheduler()
 
     while (!priority_q_is_empty() && n < CPUS)
     {
-        if (cpu_slot_available(system_cpus + cpu_id))
+        if (is_full_cpu(system_cpus + cpu_id))
         {
             n = 0;
             sem_down_t(&q_sem);
@@ -119,7 +120,7 @@ void scheduler()
             tlc_2->state = WORKING_TASK;
 
             sem_down_t(&cpu_sem);
-            cpu_insert(system_cpus + cpu_id, tlc_2);
+            insert_task_cpu(tlc_2, system_cpus + cpu_id);
             sem_up_t(&cpu_sem);
         }
         else

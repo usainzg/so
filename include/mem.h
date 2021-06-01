@@ -12,13 +12,13 @@ typedef struct
     Pages *data;
     int count;
     int size;
-} Pgb;
+} PGB;
 
 typedef struct
 {
     int code;
     int data;
-    Pgb pgb;
+    PGB pgb;
 } MM;
 
 #endif

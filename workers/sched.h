@@ -5,5 +5,4 @@ void* sched_worker();
 void scheduler();
 void* dispatcher();
 
-
 #endif

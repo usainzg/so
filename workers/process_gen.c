@@ -1,18 +1,28 @@
-#include "process_gen.h"
-#include "../../include/queue.h"
-#include "../../include/helpers.h"
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <pthread.h>
+#include <semaphore.h>
+#include "../include/task.h"
 
-pcb_struct generate_pcb(int last_pid)
+extern sem_t queue_access;
+
+char *FLD_PROGS = "programs/";
+
+int GEN_MAX = 20;
+int GEN_MIN = 10;
+int SLP_MAX = 3;
+int SLP_MIN = 1;
+
+int created_threads = 0;
+extern int PAGESIZE;
+
+void generate_task(Task *t)
 {
-    pcb_struct new_pcb;
-    last_pid += 1;
-    new_pcb.pid = last_pid;
-    new_pcb.finishing_time = rand() % 10; // max time to finish: 10 x QUANTUM
-    return new_pcb;
+    t->pid = 1 + rand() % 2500;
+    t->priority = 1 + rand() % 100;
+    t->mm.pgb = generate_pgb();
+    gettimeofday(&t->start_time, 0);
 }
 
 void *process_generator(void *queue)

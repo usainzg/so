@@ -42,7 +42,7 @@ void clock_phase_cpu()
                 if (t != 0 && t->state == WORKING_TASK)
                 {
                     t->quantum--;
-                    // Exec?
+                    execute(t);
                     if (t->task.life < 1) t->state = STOPPED_TASK;
                     
                     system_cpus[i].n_cores_per_cpu[j][k] = t;

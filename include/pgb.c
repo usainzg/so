@@ -29,7 +29,7 @@ void check_pgb(PGB *pgb)
 
 void insert_pgb(PGB *pgb, Pages page)
 {
-    _PGB_check_expansion(pgb);
+    check_pgb(pgb);
     pgb->data[pgb->count] = page;
     pgb->count++;
 }

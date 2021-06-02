@@ -6,6 +6,12 @@
 #define WORKING_TASK 0
 #define STOPPED_TASK 1
 
+/**
+ * Informacion necesaria para la ejecucion del
+ * proceso en la cpu.
+ * Quantum: numero de ciclos que le quedan en la cpu.
+ * State: estao de ejecucion (WORKING/STOPPED).
+ **/
 typedef struct
 {
     Context ctxt;
@@ -14,6 +20,11 @@ typedef struct
     int state;
 } Task_cpu;
 
+/**
+ * Lista de procesos que han terminado.
+ * Task_arr_size: tamanio de la lista.
+ * Task_arr: lista de procesos.
+ **/
 typedef struct
 {
     int task_arr_size;
@@ -29,6 +40,10 @@ typedef struct
     Core *n_cores_per_cpu;
 } Cpu;
 
+/**
+ * Estructura para almacenar la informacion de las
+ * instrucciones.
+ **/
 typedef struct
 {
     int r1, r2, r3, AAAAAA;

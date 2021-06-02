@@ -9,6 +9,9 @@ int THREADS = 4;
 
 Cpu *system_cpus;
 
+/**
+ * Inicializar las cpus del sistema.
+ **/
 void make_cpus()
 {
     int i, j, k;
@@ -29,6 +32,13 @@ void make_cpus()
     }
 }
 
+/**
+ * Cada paso (step) del reloj... todos los procesos
+ * que esten en la cpu, no hayan agotado el tiempo y 
+ * sigan trabajando (WORKING_TASK) => tienen que ejecutar el ciclo.
+ * Esta funcion resta uno al quantum de estos procesos, y llama a execute(t)
+ * para ejecutar la siguiente linea de codigo.
+ **/
 void clock_phase_cpu()
 {
     int i, j, k;
@@ -44,6 +54,8 @@ void clock_phase_cpu()
                 {
                     t->quantum--;
                     execute(t);
+
+                    // No le queda tiempo... parar.
                     if (t->task.life < 1) t->state = STOPPED_TASK;
                     
                     system_cpus[i].n_cores_per_cpu[j][k] = t;
@@ -51,6 +63,9 @@ void clock_phase_cpu()
             }
 }
 
+/**
+ * Introduce el proceso (t) en la cpu indicada (cpu).
+ **/
 void insert_task_cpu(Task_cpu *t, Cpu *cpu)
 {
     int i, j, k;
@@ -68,6 +83,11 @@ void insert_task_cpu(Task_cpu *t, Cpu *cpu)
             }
 }
 
+/**
+ * Funcion que busca en la cpu indicada los procesos
+ * que ya han finalizado, los introduce en la lista a devolver
+ * y libera los threads correspondientes.
+ **/
 Task_list_cpu sched_cpu(Cpu *cpu)
 {
     int i, j;
@@ -100,6 +120,9 @@ Task_list_cpu sched_cpu(Cpu *cpu)
     return list_cpu;
 }
 
+/**
+ * Para comprobar si una cpu tiene hueco.
+ **/
 int is_full_cpu(Cpu *cpu)
 {
     return (cpu->n_threads_per_core < CORES * THREADS) ? 1 : 0;

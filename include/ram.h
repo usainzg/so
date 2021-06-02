@@ -11,6 +11,10 @@
 int RAM_SIZE = 16;
 int PAGESIZE = 256;
 
+/**
+ * PageAmount: cuantas paginas tiene la memoria.
+ * Reserved: cuanta memoria reservada para tabla de paginas.
+ **/
 typedef struct
 {
     int pageAmount;

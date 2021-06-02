@@ -15,6 +15,11 @@ void init()
     memset(ram_mem.data, 0x00, ram_mem.size + kernel_data.reserved);
 }
 
+/**
+ * Busca en la tabla de paginas una pagina libre,
+ * devuelve la direccion a la primera posicion de la tabla.
+ * Modifica la tabla de paginas ocupando esa pagina.
+ **/
 int alloc()
 {
     int cB = -1;
@@ -36,6 +41,11 @@ int alloc()
     return (unsigned int) dF * PAGESIZE;
 }
 
+/**
+ * Devuelve la posicion del bit mas alto con valor 0. 
+ * Se usa para no ocupar toda una casilla con la tabla de paginas,
+ * solo dedicamos un bit.
+ **/
 int check(size_t const size, void const *const ptr)
 {
     unsigned char *b = (unsigned char *)ptr;
@@ -54,6 +64,9 @@ int check(size_t const size, void const *const ptr)
     return -1;
 }
 
+/**
+ * Busca la pagina que comienza por dF y la cambia a disponible.
+ **/
 void free(int dF)
 {
     int df = dF / PAGESIZE;
@@ -73,7 +86,7 @@ void free(int dF)
 void set(int addr, uint8_t val, PGB *pgb)
 {
     SemaforoDown(&ram_sem);
-    ram_mem.data[PGBGet(pgb, addr)] = val;
+    ram_mem.data[get_pgb(pgb, addr)] = val;
     SemaforoUp(&ram_sem);
 }
 
@@ -81,7 +94,7 @@ uint8_t get(int addr, PGB *pgb)
 {
     uint8_t ret;
     SemaforoDown(&ram_sem);
-    ret = ram_mem.data[PGBGet(pgb, addr)];
+    ret = ram_mem.data[get_pgb(pgb, addr)];
     SemaforoUp(&ram_sem);
     return ret;
 }
@@ -95,7 +108,7 @@ void set_word(int addr, int val, PGB *pgb)
     {
         v = (value >> 8 * i);
         value = value - (v << 8 * i);
-        ram_mem.data[PGBGet(pgb, addr + (3 - i))] = v;
+        ram_mem.data[get_pgb(pgb, addr + (3 - i))] = v;
     }
 }
 

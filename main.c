@@ -12,27 +12,21 @@
 
 extern char *optarg;
 extern int optind, optopt;
-pthread_mutex_t mutex;
-sem_t clock_sem, timer_sem, sched_sem;
 
 /**
- * Variables globales para guardar la informacion
- * de los parametros del sistema
+ * Variables globales del sistema.
  **/
-int freq_clock = 100;       // MHz
-int cycles_per_ms = 100000; // (freq_clock) MHz * 1000 = cycles_per_ms; 1MHz = 1000 cycles_per_ms
-int period_timer = 1;       // ms
-int cycles_timer = 100000;  // timer wake up every 100000 cycles (100000 cycles_per_ms * 1ms)
-int freq_process_generator = 1;
-system_cpus_struct system_cpu;
-cpu_struct cpus;
-core_struct cores;
+extern int GEN_MIN;
+extern int GEN_MAX;
+extern int CPUS;
+extern char *FLD_PROGS;
+
+extern int created_threads;
 
 void init_system_defaults();
 void get_system_params();
 void print_system_params();
 void create_system_structure();
-void *sched_worker();
 
 int main(int argc, char **argv)
 {

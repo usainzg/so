@@ -44,6 +44,12 @@ int priority_q_len()
     return len;
 }
 
+/**
+ * Funcion para "Normalizar" los nices, se
+ * ejecuta justo antes de sacar los procesos de la queue.
+ * Como se ordenan por prioridad + nice... puede haber muy negativos.
+ * Si el primero negativo con nice negativo => normalizar.
+ **/
 void priority_q_normalize()
 {
     struct Node *n;
@@ -59,7 +65,7 @@ void priority_q_normalize()
 
     if (n->order_info < 0) 
     {
-        tmp = -(n->order_info + (n->order_info/2));
+        tmp = -(n->order_info + (n->order_info/2)); // TODO: CAMBIAR??
     }
     
     n = head;

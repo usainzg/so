@@ -3,6 +3,14 @@
 
 #include "task.h"
 
+/**
+ * Un nodo parte de una lista dinamica de nodos ordenados por
+ * prioridades.
+ * Context: contexto del proceso.
+ * Task: proceso.
+ * Next_node: siguiente nodo en la lista.
+ * Order_info: variable que se usa para ordenar la lista.
+ **/
 struct Node
 {
     Context context;

@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include "cpu.h"
 
-void Execute(Task_cpu *t);
+void execute(Task_cpu *t);
 
 typedef void (*Instruction_Table) (Task_cpu *task, Instruction inst);
 

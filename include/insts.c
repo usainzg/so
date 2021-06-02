@@ -109,7 +109,7 @@ void inst_F(Task_cpu *task, Instruction inst)
     task->task.life = 0;
 }
 
-void Execute(Task_cpu *t)
+void execute(Task_cpu *t)
 {
     int inst = GetWord(t->ctxt.pc, &(t->task.mm.pgb));
     t->ctxt.pc += 4;

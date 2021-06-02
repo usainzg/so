@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "cpu.h"
+#include "insts.h"
 
 int CPUS = 2;
 int CORES = 2;

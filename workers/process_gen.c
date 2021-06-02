@@ -85,7 +85,7 @@ void new_program(Task *t, const char *file)
     }
 }
 
-void *process_generator()
+void *process_generator_worker()
 {
     Task t;
     int n_progs = n_programs();

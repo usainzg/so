@@ -3,12 +3,20 @@
 #include <stdlib.h>
 #include <pthread.h>
 #include <semaphore.h>
-#include "../include/pcb.h"
+
 #include "../include/queue.h"
 #include "../include/cpu.h"
 #include "workers/process_gen.h"
 #include "workers/timer.h"
 #include "workers/clock.h"
+#include "workers/process_gen.h"
+#include "workers/sched.c"
+
+#define TIMER_I 0
+#define CLOCK_I 1
+#define SCHED_I 2
+#define GENER_I 3
+#define WORKERS 4
 
 extern char *optarg;
 extern int optind, optopt;
@@ -18,49 +26,51 @@ extern int optind, optopt;
  **/
 extern int GEN_MIN;
 extern int GEN_MAX;
+extern int SLP_MIN;
+extern int SLP_MAX;
+extern int TIMER_T;
+extern int Q_MAX;
 extern int CPUS;
+extern int CORES;
+extern int THREADS;
+extern int RAM_SIZE;
 extern char *FLD_PROGS;
 
+extern double min_time, max_time;
 extern int created_threads;
+extern int finished_threads;
 
-void init_system_defaults();
-void get_system_params();
-void print_system_params();
-void create_system_structure();
+int exec_time = 0;
 
 int main(int argc, char **argv)
 {
-    Queue *process_queue = make_queue();
-    pthread_t clock, timer, process_gen, sched;
-
-    init_system_defaults();
+    pthread_t workers[WORKERS];
     get_system_params(argc, argv);
-    create_system_structure();
-    print_system_params();
+    
+    if (exec_time > 0) printf("=> Info: duracion maxima en segundos: %d", exec_time);
+    else printf("=> Info: no has establecido duracion maxima en segundos.");
 
-    pthread_mutex_init(&mutex, NULL);
-    sem_init(&clock_sem, 0, 0);
-    sem_init(&timer_sem, 0, 1);
-    sem_init(&sched_sem, 0, 0);
+    /**
+     * TODO: inicializar la estructura general.
+     **/
+    pthread_create(&workers[CLOCK_I], NULL, clock_worker, NULL);
+    pthread_create(&workers[TIMER_I], NULL, timer_worker, NULL);
+    pthread_create(&workers[GENER_I], NULL, process_generator_worker, NULL);
+    pthread_create(&workers[SCHED_I], NULL, sched_worker, NULL);
 
-    pthread_create(&clock, NULL, clock_worker, &cycles_timer);
-    pthread_create(&timer, NULL, timer_worker, NULL);
-    pthread_create(&sched, NULL, sched_worker, (void *)process_queue);
-    pthread_create(&process_gen, NULL, process_generator, (void *)process_queue);
+    do 
+    {
+        sleep(1);
+        exec_time -= 1;
+    } while (exec_time != 0);
 
-    pthread_join(clock, NULL);
-    pthread_join(timer, NULL);
-    pthread_join(process_gen, NULL);
-
-    // Make space free again
-    q_destroy(process_queue);
-}
-
-void init_system_defaults()
-{
-    system_cpu.n_cpus = 1;
-    cpus.n_cores = 1;
-    cores.n_threads = 1;
+    printf("-----------------------------------------------------------------------\n");
+    printf("=> Info: %d procesos creados\n", created_threads);
+    printf("=> Info: %d tareas terminadas\n", finished_threads);
+    printf("=> Info: proceso mas largo: %f segundos\n", max_time);
+    printf("=> Info: proceso mas corto: %f segundos\n", min_time);
+    printf("-----------------------------------------------------------------------\n");
+    return 0;
 }
 
 void get_system_params(int argc, char **argv)
@@ -70,98 +80,92 @@ void get_system_params(int argc, char **argv)
     {
         char c;
 
-        c = getopt(argc, argv, "c:t:p:C:O:T:");
+        c = getopt(argc, argv, "e:c:C:t:q:k:p:P:s:S:r:h");
         if (c == -1)
         {
-            /* We have finished processing all the arguments. */
+            /* Hemos terminado con todos los argumentos. */
             break;
         }
+
         switch (c)
         {
+        case 'e':
+            printf("=> Info: tiempo de ejecucion: %s \n", optarg);
+            exec_time = atoi(optarg);
+            break;
         case 'c':
-            printf("Frecuencia del clock (MHz) => -c %s.\n", optarg);
-            freq_clock = atoi(optarg);
-            break;
-        case 't':
-            printf("Periodo de tiempo del timer (ms) => -t %s.\n", optarg);
-            period_timer = atoi(optarg);
-            break;
-        case 'p':
-            printf("Frecuencia process generator => -p %s.\n", optarg);
-            freq_process_generator = atoi(optarg);
+            printf("=> Info: cores: %s.\n", optarg);
+            CORES = atoi(optarg);
             break;
         case 'C':
-            printf("Numero CPUs => -C %s.\n", optarg);
-            system_cpu.n_cpus = atoi(optarg);
+            printf("=> Info: cpus: %s.\n", optarg);
+            CPUS = atoi(optarg);
             break;
-        case 'O':
-            printf("Numero de cores => -O %s.\n", optarg);
-            cpus.n_cores = atoi(optarg);
+        case 't':
+            printf("=> Info: threads: %s.\n", optarg);
+            THREADS = atoi(optarg);
             break;
-        case 'T':
-            printf("Numero de threads => -T %s.\n", optarg);
-            cores.n_threads = atoi(optarg);
+        case 'q':
+            printf("=> Info: tam max queue: %s.\n", optarg);
+            Q_MAX = atoi(optarg);
+            break;
+        case 'k':
+            printf("=> Info: clock time trigger: %s.\n", optarg);
+            TIMER_T = atoi(optarg);
+            break;
+        case 'p':
+            printf("=> Info: generacion minima procesos: %s.\n", optarg);
+            GEN_MIN = atoi(optarg);
+            break;
+        case 'P':
+            printf("=> Info: generacion maxima procesos: %s.\n", optarg);
+            GEN_MAX = atoi(optarg);
+            break;
+        case 's':
+            printf("=> Info: sleep minimo: %s.\n", optarg);
+            SLP_MIN = atoi(optarg);
+            break;
+        case 'S':
+            printf("=> Info: sleep maximo: %s.\n", optarg);
+            SLP_MAX = atoi(optarg);
+            break;
+        case 'r':
+            printf("=> Info: tam de ram: %s.\n", optarg);
+            RAM_SIZE = atoi(optarg);
+            break;
+        case 'h':
+            printf("=> Info: HELP! Implementar! \n");
+            printf("Modo de uso: ./main [opciones] \n");
+            printf("Opciones: \n");
+            printf("    -e, establece el tiempo en segundos que dura la ejecucion (0=infinito). \n");
+            printf("    -c, establece el numero de cores. \n");
+            printf("    -C, establece el numero de cpus. \n");
+            printf("    -t, establece el numero de threads. \n");
+            printf("    -q, establece el tam maximo de la cola. \n");
+            printf("    -k, establece la cantidad de ciclos para activar timer. \n");
+            printf("    -p, establece el minimo numero de procesos a generar. \n");
+            printf("    -P, establece el maximo numero de procesos a generar. \n");
+            printf("    -s, establece el minimo tiempo a dormir. \n");
+            printf("    -S, establece el maximo tiempo a dormir. \n");
+            printf("    -r, establece el tam maximo de la memoria. \n");
+            printf("    -h, muestra la ayuda del sistema. \n");
             break;
         case '?':
         default:
-            printf("Usage: %s [-c <...>] [-t <...>] [-p <...>] [-C <...>] [-O <...>] [-T <...>]\n", argv[0]);
+            printf("Modo de uso: %s [opciones] \n", argv[0]);
         }
     }
 
-    // Set argc and argv after process options
     argc -= optind;
     argv += optind;
 
-    // Remaining arguments
+    // Argumentos que sobran
     if (argc > 0)
     {
-        printf("There are %d command-line arguments left to process:\n", argc);
+        printf("Hay %d argumentos por procesar:\n", argc);
         for (i = 0; i < argc; i++)
         {
-            printf("    Argument %d: '%s'\n", i + 1, argv[i]);
-        }
-    }
-}
-
-void print_system_params()
-{
-    printf("---------------------------\n");
-    printf(" => freq_clock: %d MHz\n", freq_clock);
-    printf(" => period_timer: %d ms\n", period_timer);
-    printf(" => freq_proc_gen: %d\n", freq_process_generator);
-    printf(" => cycles_per_ms: %d\n", cycles_per_ms);
-    printf(" => cycles_timer: %d\n", cycles_timer);
-    printf(" => CPUs: %d\n", system_cpu.n_cpus);
-    printf(" => cores_per_cpu: %d\n", cpus.n_cores);
-    printf(" => threads_per_core: %d\n", cores.n_threads);
-    printf("---------------------------\n");
-}
-
-void create_system_structure()
-{
-    int i, j, z;
-    
-    cycles_per_ms = freq_clock * 1000; // 1MHz = 1000 cycles_per_ms => X MHz * 1000 = X cycles_per_ms
-    cycles_timer = period_timer * cycles_per_ms;
-
-    system_cpu.cpus_arr = malloc(sizeof(cpu_struct) * system_cpu.n_cpus);
-
-    for (i = 0; i < system_cpu.n_cpus; i++)
-    {
-        system_cpu.cpus_arr[i].n_cores = cpus.n_cores;
-        system_cpu.cpus_arr[i].cores_arr = malloc(sizeof(core_struct) * cpus.n_cores);
-
-        for (j = 0; j < cpus.n_cores; j++)
-        {
-            system_cpu.cpus_arr[i].cores_arr[j].n_threads = cores.n_threads;
-            system_cpu.cpus_arr[i].cores_arr[j].threads_arr = malloc(sizeof(thread_struct) * cores.n_threads);
-
-            for (z = 0; z < cores.n_threads; z++)
-            {
-                system_cpu.cpus_arr[i].cores_arr[j].threads_arr[z].thread_id = z;
-
-                printf("CPU: %d, core: %d, thread: %d\n", i, j, z);
-            }
+            printf("    Argumento %d: '%s'\n", i + 1, argv[i]);
         }
     }
 }

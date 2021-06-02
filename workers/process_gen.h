@@ -5,6 +5,6 @@
 #define QUANTUM 5
 
 pcb_struct generate_pcb(int last_pid);
-void *process_generator(void *queue);
+void *process_generator_worker(void *queue);
 
 #endif

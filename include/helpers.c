@@ -46,9 +46,9 @@ void init_sems()
         flag_error = 1;
     }
 
-    if (sem_init(&oQ_sem, 0, 1) == -1)
+    if (sem_init(&ord_q_sem, 0, 1) == -1)
     {
-        print_info("No se puede crear oQ_sem", 1);
+        print_info("No se puede crear ord_q_sem", 1);
         flag_error = 1;
     }
 

@@ -53,20 +53,15 @@ int priority_q_len()
 void priority_q_normalize()
 {
     struct Node *n;
-    int i, tmp, len;
+    int i, tmp = 0, len;
 
     n = head;
     len = priority_q_len();
 
-    for (i = 0; i < len-1; i++) 
-    {
-        n = n->next_node;
-    }
+    for (i = 0; i < len-1; i++) n = n->next_node;
+    
 
-    if (n->order_info < 0) 
-    {
-        tmp = -(n->order_info + (n->order_info/2)); // TODO: CAMBIAR??
-    }
+    if (n->order_info < 0) tmp = -(n->order_info + (n->order_info/2)); // TODO: CAMBIAR??
     
     n = head;
     for (i = 0; i < len; i++)

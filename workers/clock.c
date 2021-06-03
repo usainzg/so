@@ -7,8 +7,6 @@
 
 extern sem_t cpu_sem, timer_sem;
 
-int TIMER_T = 100;
-
 void *clock_worker()
 {
     int c = 0;

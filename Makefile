@@ -1,9 +1,10 @@
 CC=gcc
-CFLAGS=-O2 -Wall
+CFLAGS=-Wall
 TARGETS=main.o
+FILES=main.c include/queue.c include/helpers.c include/insts.c include/ram.c workers/clock.c workers/timer.c workers/process_gen.c workers/sched.c
 
 main.o:
-	$(CC) $< $(CFLAGS) -o $@ main.c -lpthread
+	$(CC) $< $(CFLAGS) -o $@ $(FILES) -lm -lpthread
 
 clean:
 	rm $(TARGETS)

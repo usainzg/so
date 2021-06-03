@@ -56,6 +56,6 @@ void remove_pgb(PGB *pgb)
 {
     for (int i = 0; i < pgb->count; i++)
     {
-        Free(pgb->data[i].physical_d);
+        free_pgb(pgb->data[i].physical_d);
     }
 }

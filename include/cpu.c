@@ -3,10 +3,6 @@
 #include "cpu.h"
 #include "insts.h"
 
-int CPUS = 2;
-int CORES = 2;
-int THREADS = 4;
-
 Cpu *system_cpus;
 
 /**

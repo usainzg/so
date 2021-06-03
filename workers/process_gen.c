@@ -9,18 +9,9 @@
 #include "../include/pgb.h"
 #include "../include/ram.h"
 #include "../include/helpers.h"
+#include "process_gen.h"
 
-extern sem_t queue_access;
-
-char *FLD_PROGS = "programs/";
-
-int GEN_MAX = 20;
-int GEN_MIN = 10;
-int SLP_MAX = 3;
-int SLP_MIN = 1;
-
-int created_threads = 0;
-extern int PAGESIZE;
+extern sem_t q_sem;
 
 void generate_task(Task *t)
 {
@@ -42,7 +33,7 @@ void new_program(Task *t, const char *file)
 
         Word *rom = malloc(size);
         fseek(f, 0, SEEK_SET);
-        fread(rom, size, 1, size); // leer la rom
+        fread(rom, size, 1, f); // leer la rom
         fclose(f);
 
         generate_task(t);
@@ -83,6 +74,58 @@ void new_program(Task *t, const char *file)
         printf("=> Error: fichero erroneo! \n");
         exit(1);
     }
+}
+
+// Funcion auxiliar que cuenta los programas en la carpeta (FLD_PROGS)
+int n_programs()
+{
+    int n = 0;
+    DIR *dir = opendir(FLD_PROGS);
+    struct dirent *dt;
+
+    if (dir != NULL)
+    {
+        printf("=> Error: Directorio no existe!\n");
+        exit(0);
+    }
+
+    while ((dt = readdir(dir)) != NULL)
+    {
+        if (strcmp(dt->d_name, ".") != 0 && strcmp(dt->d_name, "..") != 0)
+        {
+            n += 1;
+        }
+    }
+    closedir(dir);
+    return n;
+}
+
+// Funcion auxiliar para obtener el programa.
+char* obten_prog(int id)
+{
+    DIR *dir = opendir(FLD_PROGS);
+    struct dirent *dt;
+    int id_aux = 0;
+    char *result;
+    
+    if (dir != NULL)
+    {
+        printf("=> Error: Directorio no existe!\n");
+        exit(0);
+    }
+    
+    while ((dt = readdir(dir)) != NULL)
+    {
+        if (strcmp(dt->d_name, ".") != 0 && strcmp(dt->d_name, "..") != 0)
+        {
+            if (id_aux == id) break;
+            else id_aux += 1;
+        }
+    }
+
+    result = dt->d_name;
+    closedir(dir);
+    return result;
 }
 
 void *process_generator_worker()
@@ -129,57 +172,4 @@ void *process_generator_worker()
         aux = SLP_MIN +  rand() % (SLP_MAX - SLP_MIN);
         sleep(aux);
     }
-}
-
-// Funcion auxiliar que cuenta los programas en la carpeta (FLD_PROGS)
-int n_programs()
-{
-    int n = 0;
-    DIR *dir = opendir(FLD_PROGS);
-    struct dirent *dt;
-
-    if (dir != NULL)
-    {
-        printf("=> Error: Directorio no existe!\n");
-        exit(0);
-    }
-
-    while ((dt = readdir(dir)) != NULL)
-    {
-        if (strcmp(dt->d_name, ".") != 0 && strcmp(dt->d_name, "..") != 0)
-        {
-            n += 1;
-        }
-    }
-    closedir(dir);
-    return n;
-}
-
-
-// Funcion auxiliar para obtener el programa.
-char* obten_prog(int id)
-{
-    DIR *dir = opendir(FLD_PROGS);
-    struct dirent *dt;
-    int id_aux = 0;
-    char *result;
-    
-    if (dir != NULL)
-    {
-        printf("=> Error: Directorio no existe!\n");
-        exit(0);
-    }
-    
-    while ((dt = readdir(dir)) != NULL)
-    {
-        if (strcmp(dt->d_name, ".") != 0 && strcmp(dt->d_name, "..") != 0)
-        {
-            if (id_aux == id) break;
-            else id_aux += 1;
-        }
-    }
-
-    result = dt->d_name;
-    closedir(dir);
-    return result;
 }

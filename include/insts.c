@@ -2,19 +2,20 @@
 #include <stdio.h>
 #include <stdint.h>
 #include "cpu.h"
+#include "ram.h"
 
 typedef void (*Instruction_Table)(Task_cpu *task, Instruction inst);
 
 /* ld */
 void inst_0(Task_cpu *task, Instruction inst)
 {
-    task->ctxt.rg[inst.r1] = GetWord(inst.AAAAAA, &(task->task.mm.pgb));
+    task->ctxt.rg[inst.r1] = get_word(inst.AAAAAA, &(task->task.mm.pgb));
 }
 
 /* st */
 void inst_1(Task_cpu *task, Instruction inst)
 {
-    SetWord(inst.AAAAAA, task->ctxt.rg[inst.r1], &(task->task.mm.pgb));
+    set_word(inst.AAAAAA, task->ctxt.rg[inst.r1], &(task->task.mm.pgb));
 }
 
 /* add */
@@ -111,7 +112,7 @@ void inst_F(Task_cpu *task, Instruction inst)
 
 void execute(Task_cpu *t)
 {
-    int inst = GetWord(t->ctxt.pc, &(t->task.mm.pgb));
+    int inst = get_word(t->ctxt.pc, &(t->task.mm.pgb));
     t->ctxt.pc += 4;
 
     Instruction i;

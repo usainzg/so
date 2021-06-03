@@ -6,6 +6,10 @@
 #define WORKING_TASK 0
 #define STOPPED_TASK 1
 
+int CPUS = 2;
+int CORES = 2;
+int THREADS = 4;
+
 /**
  * Informacion necesaria para la ejecucion del
  * proceso en la cpu.

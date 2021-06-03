@@ -3,12 +3,12 @@
 #include <pthread.h>
 #include <unistd.h>
 #include "sched.h"
-#include "task.h"
-#include "queue.h"
-#include "helpers.h"
-#include "prio_q.h"
+#include "../include/helpers.h"
+#include "../include/prio_q.h"
 #include "../include/cpu.h"
 #include "../include/pgb.h"
+#include "../include/task.h"
+#include "../include/queue.h"
 
 pthread_t dispatch_worker;
 
@@ -17,11 +17,6 @@ extern Cpu *system_cpus;
 extern int CPUS, t;
 
 int cpu_id = 0;
-
-double max_time = 0.0;
-double min_time = 9999999999.0;
-
-int finished_threads = 0;
 
 void *dispatcher()
 {
@@ -63,7 +58,7 @@ void scheduler()
     for (int i = 0; i < CPUS; i++)
     {
         sem_down_t(&cpu_sem);
-        tlc = sched_cpu(&system_cpus);
+        tlc = sched_cpu(&system_cpus[i]);
         sem_up_t(&cpu_sem);
 
         while (tlc.task_arr_size > 0)

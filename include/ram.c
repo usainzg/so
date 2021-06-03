@@ -4,7 +4,7 @@
 RAM ram_mem;
 Kernel_data kernel_data;
 
-void init()
+void init_ram()
 {
     ram_mem.size = 2 << RAM_SIZE;
     kernel_data.pageAmount = ram_mem.size / PAGESIZE;
@@ -25,7 +25,7 @@ int alloc()
     int cB = -1;
     int dF = -1;
 
-    SemaforoDown(&pageT_sem);
+    sem_down_t(&pageT_sem);
     for (int i = 0; i < kernel_data.reserved && dF == -1; i++)
     {
         cB = check(sizeof(uint8_t), &ram_mem.data[ram_mem.size + i]);
@@ -37,7 +37,7 @@ int alloc()
         }
     }
 
-    SemaforoUp(&pageT_sem);
+    sem_up_t(&pageT_sem);
     return (unsigned int) dF * PAGESIZE;
 }
 
@@ -67,35 +67,35 @@ int check(size_t const size, void const *const ptr)
 /**
  * Busca la pagina que comienza por dF y la cambia a disponible.
  **/
-void free(int dF)
+void free_pgb(int dF)
 {
     int df = dF / PAGESIZE;
     int cB = df % 8;
     int i = (df - cB) / 8;
 
-    SemaforoDown(&pageT_sem);
+    sem_down_t(&pageT_sem);
     uint8_t slot = ram_mem.data[ram_mem.size + i];
     uint8_t resta = 0x01 << cB;
     if (slot != 0)
     {
         ram_mem.data[ram_mem.size + i] = slot ^ resta;
     }
-    SemaforoUp(&pageT_sem);
+    sem_up_t(&pageT_sem);
 }
 
 void set(int addr, uint8_t val, PGB *pgb)
 {
-    SemaforoDown(&ram_sem);
+    sem_down_t(&ram_sem);
     ram_mem.data[get_pgb(pgb, addr)] = val;
-    SemaforoUp(&ram_sem);
+    sem_up_t(&ram_sem);
 }
 
 uint8_t get(int addr, PGB *pgb)
 {
     uint8_t ret;
-    SemaforoDown(&ram_sem);
+    sem_down_t(&ram_sem);
     ret = ram_mem.data[get_pgb(pgb, addr)];
-    SemaforoUp(&ram_sem);
+    sem_up_t(&ram_sem);
     return ret;
 }
 
@@ -118,7 +118,7 @@ unsigned int get_word(int addr, PGB *pgb)
     for (int i = 0; i < 4; i++)
     {
         word <<= 8;
-        word += Get(addr + i, pgb);
+        word += get(addr + i, pgb);
     }
     return word;
 }

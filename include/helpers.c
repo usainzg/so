@@ -1,5 +1,6 @@
 #include "helpers.h"
 #include <stdio.h>
+#include <stdlib.h>
 
 void print_info(char *str, int arrow)
 {

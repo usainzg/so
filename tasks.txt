@@ -14,3 +14,4 @@
     - https://github.com/loongson-community/linux-loongson-community/blob/178edb798ab6d9586f1673009e9ee933d251a285/Documentation/scheduler/sched-BFS.txt
     - https://github.com/YasminBeatriz/Round-Robin-Process-Scheduling-Simulation
     
+include/cpu.c include/helpers.c include/insts.c include/pgb.c include/prio_q.c include/queue.c include/ram.c workers/clock.c workers/process_gen.c workers/sched.c workers/timer.c

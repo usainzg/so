@@ -4,13 +4,20 @@
 #include <pthread.h>
 #include <semaphore.h>
 
-#include "../include/queue.h"
-#include "../include/cpu.h"
+#include "include/cpu.h"
+#include "include/helpers.h"
+#include "include/insts.h"
+#include "include/mem.h"
+#include "include/pgb.h"
+#include "include/prio_q.h"
+#include "include/queue.h"
+#include "include/ram.h"
+#include "include/task.h"
+
 #include "workers/process_gen.h"
 #include "workers/timer.h"
 #include "workers/clock.h"
-#include "workers/process_gen.h"
-#include "workers/sched.c"
+#include "workers/sched.h"
 
 #define TIMER_I 0
 #define CLOCK_I 1
@@ -41,37 +48,6 @@ extern int created_threads;
 extern int finished_threads;
 
 int exec_time = 0;
-
-int main(int argc, char **argv)
-{
-    pthread_t workers[WORKERS];
-    get_system_params(argc, argv);
-    
-    if (exec_time > 0) printf("=> Info: duracion maxima en segundos: %d", exec_time);
-    else printf("=> Info: no has establecido duracion maxima en segundos.");
-
-    /**
-     * TODO: inicializar la estructura general.
-     **/
-    pthread_create(&workers[CLOCK_I], NULL, clock_worker, NULL);
-    pthread_create(&workers[TIMER_I], NULL, timer_worker, NULL);
-    pthread_create(&workers[GENER_I], NULL, process_generator_worker, NULL);
-    pthread_create(&workers[SCHED_I], NULL, sched_worker, NULL);
-
-    do 
-    {
-        sleep(1);
-        exec_time -= 1;
-    } while (exec_time != 0);
-
-    printf("-----------------------------------------------------------------------\n");
-    printf("=> Info: %d procesos creados\n", created_threads);
-    printf("=> Info: %d tareas terminadas\n", finished_threads);
-    printf("=> Info: proceso mas largo: %f segundos\n", max_time);
-    printf("=> Info: proceso mas corto: %f segundos\n", min_time);
-    printf("-----------------------------------------------------------------------\n");
-    return 0;
-}
 
 void get_system_params(int argc, char **argv)
 {
@@ -168,4 +144,38 @@ void get_system_params(int argc, char **argv)
             printf("    Argumento %d: '%s'\n", i + 1, argv[i]);
         }
     }
+}
+
+int main(int argc, char **argv)
+{
+    pthread_t workers[WORKERS];
+    get_system_params(argc, argv);
+    srand(pthread_self());
+
+    if (exec_time > 0) printf("=> Info: duracion maxima en segundos: %d", exec_time);
+    else printf("=> Info: no has establecido duracion maxima en segundos.");
+
+    make_cpus();
+    make_queue();
+    init_sems();
+    init_ram();
+    
+    pthread_create(&workers[CLOCK_I], NULL, clock_worker, NULL);
+    pthread_create(&workers[TIMER_I], NULL, timer_worker, NULL);
+    pthread_create(&workers[GENER_I], NULL, process_generator_worker, NULL);
+    pthread_create(&workers[SCHED_I], NULL, sched_worker, NULL);
+
+    do 
+    {
+        sleep(1);
+        exec_time -= 1;
+    } while (exec_time != 0);
+
+    printf("-----------------------------------------------------------------------\n");
+    printf("=> Info: %d procesos creados\n", created_threads);
+    printf("=> Info: %d tareas terminadas\n", finished_threads);
+    printf("=> Info: proceso mas largo: %f segundos\n", max_time);
+    printf("=> Info: proceso mas corto: %f segundos\n", min_time);
+    printf("-----------------------------------------------------------------------\n");
+    return 0;
 }

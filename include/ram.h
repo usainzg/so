@@ -29,10 +29,10 @@ typedef struct
 } RAM;
 
 
-void init();
+void init_ram();
 int alloc();
 int check(size_t const size, void const *const ptr);
-void free(int physical_d);
+void free_pgb(int physical_d);
 void set(int addr, uint8_t val, PGB *pgb);
 uint8_t get(int addr, PGB *pgb);
 void set_word(int addr, int val, PGB *pgb);

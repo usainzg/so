@@ -183,7 +183,7 @@ void *process_generator_worker()
             }
 
             sem_up_t(&q_sem);
-            aux =- 1;
+            aux -= 1;
         }
 
         // Calcular tiempo para dormir (igual que para generar), y a dormir.

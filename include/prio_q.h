@@ -1,60 +1,12 @@
 #ifndef PRIOQ_H
 #define PRIOQ_H
 
-#include "task.h"
-
-/**
- * Un nodo parte de una lista dinamica de nodos ordenados por
- * prioridades.
- * Context: contexto del proceso.
- * Task: proceso.
- * Next_node: siguiente nodo en la lista.
- * Order_info: variable que se usa para ordenar la lista.
- **/
-struct Node
-{
-    Context context;
-    Task task;
-    struct Node *next_node;
-    int order_info;
-};
-
-void priority_q_insert(Task t, Context ctxt, int info);
-Task priority_q_delete_first(Context *ctxt, int *nice);
-int priority_q_is_empty();
-int priority_q_len();
-void priority_q_normalize();
-void priority_q_sort();
-void priority_q_print();
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include "structs.h"
 
 struct Node *head, *cur;
-
-void priority_q_insert(Task t, Context ctxt, int ord_info)
-{
-    struct Node *n = (struct Node*) malloc(sizeof(struct Node));
-    n->task = t;
-    n->order_info = ord_info;
-    n->context = ctxt;
-
-    n->next_node = head;
-    head = n;
-
-    priority_q_sort();
-}
-
-Task priority_q_delete_first(Context *ctxt, int *nice)
-{
-    struct Node *tmp = head;
-    head = head->next_node;
-    (*nice) = tmp->order_info;
-    (*ctxt) = tmp->context;
-    return tmp->task;
-}
-
-int priority_q_is_empty()
-{
-    return (head == NULL) ? 1 : 0;
-}
 
 int priority_q_len()
 {
@@ -67,33 +19,6 @@ int priority_q_len()
     }
 
     return len;
-}
-
-/**
- * Funcion para "Normalizar" los nices, se
- * ejecuta justo antes de sacar los procesos de la queue.
- * Como se ordenan por prioridad + nice... puede haber muy negativos.
- * Si el primero negativo con nice negativo => normalizar.
- **/
-void priority_q_normalize()
-{
-    struct Node *n;
-    int i, tmp = 0, len;
-
-    n = head;
-    len = priority_q_len();
-
-    for (i = 0; i < len-1; i++) n = n->next_node;
-    
-
-    if (n->order_info < 0) tmp = -(n->order_info + (n->order_info/2)); // TODO: CAMBIAR??
-    
-    n = head;
-    for (i = 0; i < len; i++)
-    {
-        n->order_info += tmp;
-        n = n->next_node;
-    }
 }
 
 void priority_q_sort()
@@ -133,6 +58,60 @@ void priority_q_sort()
             cur = cur->next_node;
             next = next->next_node;
         }
+    }
+}
+
+void priority_q_insert(Task t, Context ctxt, int ord_info)
+{
+    struct Node *n = (struct Node*) malloc(sizeof(struct Node));
+    n->task = t;
+    n->order_info = ord_info;
+    n->context = ctxt;
+
+    n->next_node = head;
+    head = n;
+
+    priority_q_sort();
+}
+
+Task priority_q_delete_first(Context *ctxt, int *nice)
+{
+    struct Node *tmp = head;
+    head = head->next_node;
+    (*nice) = tmp->order_info;
+    (*ctxt) = tmp->context;
+    return tmp->task;
+}
+
+int priority_q_is_empty()
+{
+    return (head == NULL) ? 1 : 0;
+}
+
+/**
+ * Funcion para "Normalizar" los nices, se
+ * ejecuta justo antes de sacar los procesos de la queue.
+ * Como se ordenan por prioridad + nice... puede haber muy negativos.
+ * Si el primero negativo con nice negativo => normalizar.
+ **/
+void priority_q_normalize()
+{
+    struct Node *n;
+    int i, tmp = 0, len;
+
+    n = head;
+    len = priority_q_len();
+
+    for (i = 0; i < len-1; i++) n = n->next_node;
+    
+
+    if (n->order_info < 0) tmp = -(n->order_info + (n->order_info/2)); // TODO: CAMBIAR??
+    
+    n = head;
+    for (i = 0; i < len; i++)
+    {
+        n->order_info += tmp;
+        n = n->next_node;
     }
 }
 

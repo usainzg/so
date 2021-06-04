@@ -7,12 +7,11 @@
 #include "include/cpu.h"
 #include "include/helpers.h"
 #include "include/insts.h"
-#include "include/mem.h"
 #include "include/pgb.h"
 #include "include/prio_q.h"
 #include "include/queue.h"
 #include "include/ram.h"
-#include "include/task.h"
+#include "include/structs.h"
 
 #include "workers/process_gen.h"
 #include "workers/timer.h"
@@ -152,8 +151,8 @@ int main(int argc, char **argv)
     get_system_params(argc, argv);
     srand(pthread_self());
 
-    if (exec_time > 0) printf("=> Info: duracion maxima en segundos: %d", exec_time);
-    else printf("=> Info: no has establecido duracion maxima en segundos.");
+    if (exec_time > 0) printf("=> Info: duracion maxima en segundos: %d \n", exec_time);
+    else printf("=> Info: no has establecido duracion maxima en segundos.\n");
 
     make_cpus();
     make_queue();

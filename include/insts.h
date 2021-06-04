@@ -2,7 +2,7 @@
 #define INSTS_H
 
 #include <stdio.h>
-#include "cpu.h"
+#include "structs.h"
 #include "ram.h"
 
 typedef void (*Instruction_Table)(Task_cpu *task, Instruction inst);
@@ -118,7 +118,7 @@ Instruction_Table insts[16] = {
 
 void execute(Task_cpu *t)
 {
-    int inst = get_word(t->ctxt.pc, &(t->task.mm.pgb));
+    unsigned int inst = get_word(t->ctxt.pc, &(t->task.mm.pgb));
     t->ctxt.pc += 4;
 
     Instruction i;

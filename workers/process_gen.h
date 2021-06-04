@@ -1,10 +1,15 @@
 #ifndef P_GEN_H
 #define P_GEN_H
 
+#include <unistd.h>
+#include <pthread.h>
+#include <dirent.h>
+
 #include "../include/ram.h"
 #include "../include/pgb.h"
 #include "../include/queue.h"
 #include "../include/helpers.h"
+#include "../include/structs.h"
 
 #define QUANTUM 5
 
@@ -96,7 +101,7 @@ int n_programs()
     DIR *dir = opendir(FLD_PROGS);
     struct dirent *dt;
 
-    if (dir != NULL)
+    if (dir == NULL)
     {
         printf("=> Error: Directorio no existe!\n");
         exit(0);
@@ -121,7 +126,7 @@ char* obten_prog(int id)
     int id_aux = 0;
     char *result;
     
-    if (dir != NULL)
+    if (dir == NULL)
     {
         printf("=> Error: Directorio no existe!\n");
         exit(0);
@@ -182,7 +187,7 @@ void *process_generator_worker()
         }
 
         // Calcular tiempo para dormir (igual que para generar), y a dormir.
-        aux = SLP_MIN +  rand() % (SLP_MAX - SLP_MIN);
+        aux = SLP_MIN + rand() % (SLP_MAX - SLP_MIN);
         sleep(aux);
     }
 }

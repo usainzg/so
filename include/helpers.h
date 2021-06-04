@@ -36,11 +36,11 @@ void print_info(char *str, int arrow)
 {
     if (arrow == 0)
     {
-        printf("INFO: %s\n", str);   
+        printf("Info: %s\n", str);   
     }
     else
     {
-        printf(" => INFO: %s\n", str);
+        printf(" => Info: %s\n", str);
     }
 }
 

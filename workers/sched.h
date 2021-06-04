@@ -1,6 +1,11 @@
 #ifndef SCHED_H
 #define SCHED_H
 
+#include <unistd.h>
+#include <pthread.h>
+
+#include "timer.h"
+
 #include "../include/cpu.h"
 #include "../include/queue.h"
 #include "../include/prio_q.h"

@@ -1,10 +1,10 @@
 CC=gcc
-CFLAGS=-Wall
-TARGETS=main.o
+CFLAGS=-Wall -g
+TARGETS=main
 FILES=main.c
 
 main.o:
-	$(CC) $< $(CFLAGS) -o $@ $(FILES) -lm -lpthread
+	$(CC) $< $(CFLAGS) -o $(TARGETS) $(FILES) -lm -lpthread
 
 clean:
 	rm $(TARGETS)

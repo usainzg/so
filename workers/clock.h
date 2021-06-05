@@ -13,6 +13,7 @@ extern sem_t cpu_sem, timer_sem;
 void *clock_worker()
 {
     int c = 0;
+    printf("=> [CLK] => TIMER_T a: %d\n", TIMER_T);
     while (1)
     {
         do

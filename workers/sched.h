@@ -39,8 +39,9 @@ void *dispatcher()
         {
             sem_down_t(&q_sem);
             task = q_delete_node();
-            sem_up_t(&q_sem); // TODO: eliminar estos helpers???
+            sem_up_t(&q_sem);
 
+            printf("[SCD] => (%ld) entra lista espera: | %d, %d | \n", task.pid, task.life, task.priority);
             ctxt.pc = task.mm.code;
 
             sem_down_t(&ord_q_sem);
@@ -62,7 +63,7 @@ void scheduler()
     Task_cpu tcpu;
 
     Task t;
-    Task_cpu *tlc_2;
+    Task_cpu *tcpu2;
     Context ctxt;
 
     for (int i = 0; i < CPUS; i++)
@@ -77,6 +78,7 @@ void scheduler()
 
             if (tcpu.state != STOPPED_TASK && tcpu.task.life > 0)
             {
+                printf("[SCD] => (%ld) a lista de espera, nice: %d\n", tcpu.task.pid, tcpu.quantum);
                 sem_down_t(&q_sem);
                 priority_q_insert(tcpu.task, tcpu.ctxt, tcpu.task.priority + tcpu.quantum);
                 sem_up_t(&q_sem);
@@ -91,7 +93,8 @@ void scheduler()
                     min_time = t_lived;
                 if (max_time < t_lived)
                     max_time = t_lived;
-
+                
+                printf("[SCD] => (%ld) termina en %f segundos\n", tcpu.task.pid, t_lived);
                 finished_threads += 1;
             }
 
@@ -118,14 +121,16 @@ void scheduler()
             if (q > t.life)
                 q = t.life;
 
-            tlc_2 = malloc(sizeof(Task_cpu));
-            tlc_2->task = t;
-            tlc_2->ctxt = ctxt;
-            tlc_2->quantum = q;
-            tlc_2->state = WORKING_TASK;
+            tcpu2 = malloc(sizeof(Task_cpu));
+            tcpu2->task = t;
+            tcpu2->ctxt = ctxt;
+            tcpu2->quantum = q;
+            tcpu2->state = WORKING_TASK;
+
+            printf("[SCD] => (%ld) va a entrar en CPU: %d, quantum: %d\n", tcpu2->task.pid, cpu_id, tcpu2->quantum);
 
             sem_down_t(&cpu_sem);
-            insert_task_cpu(tlc_2, system_cpus + cpu_id);
+            insert_task_cpu(tcpu2, system_cpus + cpu_id);
             sem_up_t(&cpu_sem);
         }
         else
@@ -152,6 +157,7 @@ void *sched_worker()
         if (t >= 1)
         {
             t = 0;
+            printf("[SCD] => llamando a scheduler() \n");
             scheduler();
         }
     }

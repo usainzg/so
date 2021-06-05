@@ -56,6 +56,8 @@ void new_program(Task *t, const char *file)
 
         generate_task(t);
         
+        printf("[P_G] => Carga el programa %s con el id %lu\n", rom, t->pid);
+        
         // Calcular direcciones de .text y .data.
         // Tambien asignamos las direcciones.
         t->mm.code = (rom[5] << 2) + (rom[6] << 1) + rom[7];
@@ -73,6 +75,7 @@ void new_program(Task *t, const char *file)
             aloc = alloc();
             if (aloc < 0)
             {
+                printf("[P_G] => No hay espacio en memoria, no se puede crear proceso. \n");
                 remove_pgb(&(t->mm.pgb));
                 t->pid = 0;
                 return;
@@ -89,7 +92,7 @@ void new_program(Task *t, const char *file)
     }
     else
     {
-        printf("=> Error: fichero erroneo! \n");
+        printf("[P_G] => Error: fichero erroneo! \n");
         exit(1);
     }
 }
@@ -103,7 +106,7 @@ int n_programs()
 
     if (dir == NULL)
     {
-        printf("=> Error: Directorio no existe!\n");
+        printf("[P_G] => Error: Directorio no existe!\n");
         exit(0);
     }
 
@@ -128,7 +131,7 @@ char* obten_prog(int id)
     
     if (dir == NULL)
     {
-        printf("=> Error: Directorio no existe!\n");
+        printf("[P_G] => Error: Directorio no existe!\n");
         exit(0);
     }
     
@@ -150,6 +153,7 @@ void *process_generator_worker()
 {
     Task t;
     int n_progs = n_programs();
+    printf("[P_G] => hay %d programas para cargar. \n", n_progs);
     int f;
     char *f_c;
     int aux = 0;
@@ -158,7 +162,7 @@ void *process_generator_worker()
     {
         // Cuantos procesos a generar
         aux = GEN_MIN + rand() % (GEN_MAX - GEN_MIN);
-
+        printf("[P_G] => procesos a crear: %d\n", aux);
         while (aux > 0)
         {
             sem_down_t(&q_sem);
@@ -188,6 +192,7 @@ void *process_generator_worker()
 
         // Calcular tiempo para dormir (igual que para generar), y a dormir.
         aux = SLP_MIN + rand() % (SLP_MAX - SLP_MIN);
+        printf("[P_G] => tiempo a dormir: %d\n", aux);
         sleep(aux);
     }
 }

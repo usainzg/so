@@ -25,6 +25,8 @@ void init_ram()
     
     ram_mem.data = malloc(sizeof(Word) * (ram_mem.size + kernel_data.reserved));
     memset(ram_mem.data, 0x00, ram_mem.size + kernel_data.reserved);
+
+    printf("[RAM] => inint RAM %d posiciones (%d páginas)\n", ram_mem.size, kernel_data.pageAmount);
 }
 
 /**
@@ -73,6 +75,14 @@ int alloc()
     }
 
     sem_up_t(&pageT_sem);
+
+    printf("[RAM] (Alloc)\n");
+    for(int i = 0; i < kernel_data.reserved; i++)
+    {
+        printBits(sizeof(uint8_t), &ram_mem.data[ram_mem.size + i]);
+    }
+    printf("\n");
+
     return (unsigned int) dF * PAGESIZE;
 }
 
@@ -93,6 +103,13 @@ void free_pgb(int dF)
         ram_mem.data[ram_mem.size + i] = slot ^ resta;
     }
     sem_up_t(&pageT_sem);
+
+    printf("[RAM] (Free)\n");
+    for(int i = 0; i < kernel_data.reserved; i++)
+    {
+        printBits(sizeof(uint8_t), &ram_mem.data[ram_mem.size + i]);
+    }
+    printf("\n");
 }
 
 void set(int addr, uint8_t val, PGB *pgb)

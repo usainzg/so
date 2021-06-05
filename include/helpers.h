@@ -11,11 +11,6 @@
 sem_t timer_sem, cpu_sem, ram_sem, pageT_sem, q_sem, ord_q_sem;
 
 /**
- * Funcion para imprimir info por pantalla
- **/
-void print_info(char *str, int arrow);
-
-/**
  * Funcion que inicializa los semaforos
  **/
 void init_sems();
@@ -32,54 +27,42 @@ void sem_up_t(sem_t *opt);
  **/
 void sem_down_t(sem_t *opt);
 
-void print_info(char *str, int arrow)
-{
-    if (arrow == 0)
-    {
-        printf("Info: %s\n", str);   
-    }
-    else
-    {
-        printf(" => Info: %s\n", str);
-    }
-}
-
 void init_sems()
 {
     int flag_error = 0;
     if (sem_init(&timer_sem, 0, 0) == -1)
     {
-        print_info("No se puede crear timer_sem", 1);
+        printf("[HLP] => No se puede crear timer_sem\n");
         flag_error = 1;
     }
 
     if (sem_init(&cpu_sem, 0, 1) == -1)
     {
-        print_info("No se puede crear cpu_sem", 1);
+        printf("[HLP] => No se puede crear cpu_sem\n");
         flag_error = 1;
     }
 
     if (sem_init(&ram_sem, 0, 1) == -1)
     {
-        print_info("No se puede crear ram_sem", 1);
+        printf("[HLP] => No se puede crear ram_sem\n");
         flag_error = 1;
     }
 
     if (sem_init(&pageT_sem, 0, 1) == -1)
     {
-        print_info("No se puede crear oageT_sem", 1);
+        printf("[HLP] => No se puede crear oageT_sem\n");
         flag_error = 1;
     }
 
     if (sem_init(&q_sem, 0, 1) == -1)
     {
-        print_info("No se puede crear q_sem", 1);
+        printf("[HLP] => No se puede crear q_sem\n");
         flag_error = 1;
     }
 
     if (sem_init(&ord_q_sem, 0, 1) == -1)
     {
-        print_info("No se puede crear ord_q_sem", 1);
+        printf("[HLP] => No se puede crear ord_q_sem\n");
         flag_error = 1;
     }
 
@@ -88,7 +71,7 @@ void init_sems()
 
 void sem_up_t(sem_t *opt)
 {
-    if (sem_post(opt) == -1) print_info("Error: sem_post(opt)", 1);
+    if (sem_post(opt) == -1) printf("[HLP] => Error: sem_post(opt)\n");
 }
 
 void sem_down_t(sem_t *opt)

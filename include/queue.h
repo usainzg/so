@@ -17,7 +17,7 @@ void make_queue()
     q.tail = -1;
     q.len = 0;
     q.max_len = Q_MAX;
-    print_info("Init de Q.", 1);
+    printf("[QUE] => init de queue con %d max\n", Q_MAX);
 }
 
 int q_size()

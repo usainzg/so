@@ -61,7 +61,6 @@ void clock_phase_cpu()
                 
                 if (t != 0 && t->state == WORKING_TASK)
                 {
-                    printf("[CPU]\n");
                     t->quantum--;
                     execute(t);
 
@@ -71,7 +70,6 @@ void clock_phase_cpu()
                     system_cpus[i].n_cores_per_cpu[j][k] = t;
                 }
             }
-    printf("\n");
 }
 
 /**

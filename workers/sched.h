@@ -97,10 +97,9 @@ void scheduler()
                 printf("[SCD] => (%ld) termina en %f segundos\n", tcpu.task.pid, t_lived);
                 finished_threads += 1;
             }
-
-            free(tlc.task_arr);
             tlc.task_arr_size -= 1;
         }
+        free(tlc.task_arr);
     }
 
     if (!priority_q_is_empty())
@@ -157,7 +156,6 @@ void *sched_worker()
         if (t >= 1)
         {
             t = 0;
-            printf("[SCD] => llamando a scheduler() \n");
             scheduler();
         }
     }

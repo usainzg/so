@@ -52,6 +52,21 @@ int check(size_t const size, void const *const ptr)
     return -1;
 }
 
+void print(size_t const size, void const *const ptr)
+{
+    unsigned char *b = (unsigned char *) ptr;
+    unsigned char byte;
+    int i, j;
+
+    for (i = size - 1; i >= 0; i--)
+        for (j = 7; j >= 0; j--)
+        {
+            byte = (b[i] >> j) & 1;
+            printf("%u", byte);
+        }
+    puts("");
+}
+
 /**
  * Busca en la tabla de paginas una pagina libre,
  * devuelve la direccion a la primera posicion de la tabla.
@@ -79,7 +94,7 @@ int alloc()
     printf("[RAM] (Alloc)\n");
     for(int i = 0; i < kernel_data.reserved; i++)
     {
-        printBits(sizeof(uint8_t), &ram_mem.data[ram_mem.size + i]);
+        print(sizeof(uint8_t), &ram_mem.data[ram_mem.size + i]);
     }
     printf("\n");
 
@@ -107,7 +122,7 @@ void free_pgb(int dF)
     printf("[RAM] (Free)\n");
     for(int i = 0; i < kernel_data.reserved; i++)
     {
-        printBits(sizeof(uint8_t), &ram_mem.data[ram_mem.size + i]);
+        print(sizeof(uint8_t), &ram_mem.data[ram_mem.size + i]);
     }
     printf("\n");
 }
@@ -150,21 +165,6 @@ unsigned int get_word(int addr, PGB *pgb)
         word += get(addr + i, pgb);
     }
     return word;
-}
-
-void print(size_t const size, void const *const ptr)
-{
-    unsigned char *b = (unsigned char *) ptr;
-    unsigned char byte;
-    int i, j;
-
-    for (i = size - 1; i >= 0; i--)
-        for (j = 7; j >= 0; j--)
-        {
-            byte = (b[i] >> j) & 1;
-            printf("%u", byte);
-        }
-    puts("");
 }
 
 #endif

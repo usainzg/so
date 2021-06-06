@@ -10,6 +10,7 @@
 #include "helpers.h"
 #include "structs.h"
 
+int VERBOSE_MEM = 0;
 int RAM_SIZE = 16;
 int PAGESIZE = 256;
 
@@ -26,7 +27,7 @@ void init_ram()
     ram_mem.data = malloc(sizeof(Word) * (ram_mem.size + kernel_data.reserved));
     memset(ram_mem.data, 0x00, ram_mem.size + kernel_data.reserved);
 
-    printf("[RAM] => inint RAM %d posiciones (%d páginas)\n", ram_mem.size, kernel_data.pageAmount);
+    printf("[RAM] => init RAM %d posiciones (%d páginas)\n", ram_mem.size, kernel_data.pageAmount);
 }
 
 /**
@@ -91,12 +92,15 @@ int alloc()
 
     sem_up_t(&pageT_sem);
 
-    printf("[RAM] (Alloc)\n");
-    for(int i = 0; i < kernel_data.reserved; i++)
+    if (VERBOSE_MEM)
     {
-        print(sizeof(uint8_t), &ram_mem.data[ram_mem.size + i]);
+        printf("[RAM] (Alloc)\n");
+        for(int i = 0; i < kernel_data.reserved; i++)
+        {
+            print(sizeof(uint8_t), &ram_mem.data[ram_mem.size + i]);
+        }
+        printf("\n");
     }
-    printf("\n");
 
     return (unsigned int) dF * PAGESIZE;
 }
@@ -119,12 +123,15 @@ void free_pgb(int dF)
     }
     sem_up_t(&pageT_sem);
 
-    printf("[RAM] (Free)\n");
-    for(int i = 0; i < kernel_data.reserved; i++)
+    if (VERBOSE_MEM)
     {
-        print(sizeof(uint8_t), &ram_mem.data[ram_mem.size + i]);
+        printf("[RAM] (Free)\n");
+        for(int i = 0; i < kernel_data.reserved; i++)
+        {
+            print(sizeof(uint8_t), &ram_mem.data[ram_mem.size + i]);
+        }
+        printf("\n");
     }
-    printf("\n");
 }
 
 void set(int addr, uint8_t val, PGB *pgb)

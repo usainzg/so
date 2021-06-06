@@ -105,7 +105,7 @@ void priority_q_normalize()
     for (i = 0; i < len-1; i++) n = n->next_node;
     
 
-    if (n->order_info < 0) tmp = -(n->order_info + (n->order_info/2)); // TODO: CAMBIAR??
+    if (n->order_info < 0) tmp = -n->order_info * 2;
     
     n = head;
     for (i = 0; i < len; i++)
@@ -113,22 +113,6 @@ void priority_q_normalize()
         n->order_info += tmp;
         n = n->next_node;
     }
-}
-
-void priority_q_print()
-{
-    int i = 0, pid;
-    struct Node *c = head;
-    int len = priority_q_len();
-    printf("[ ");
-    while (i < len)
-    {
-        pid = c->task.pid;
-        printf("%d\t", pid);
-        c = c->next_node;
-        i += 1;
-    }
-    printf(" ]\n");
 }
 
 #endif

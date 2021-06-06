@@ -6,7 +6,7 @@
 
 #include "structs.h"
 
-int Q_MAX = 25;
+int Q_MAX = 50;
 
 Queue q;
 

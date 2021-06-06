@@ -41,6 +41,7 @@ extern int CORES;
 extern int THREADS;
 extern int RAM_SIZE;
 extern char *FLD_PROGS;
+extern int VERBOSE_MEM;
 
 extern double min_time, max_time;
 extern int created_threads;
@@ -108,8 +109,12 @@ void get_system_params(int argc, char **argv)
             printf("=> Info: tam de ram: %s.\n", optarg);
             RAM_SIZE = atoi(optarg);
             break;
+        case 'v':
+            printf("=> Info: modo verbose mem activado. \n");
+            VERBOSE_MEM = 1;
+            break;
         case 'h':
-            printf("=> Info: HELP! Implementar! \n");
+            printf("=> Info: --- HELP --- \n");
             printf("Modo de uso: ./main [opciones] \n");
             printf("Opciones: \n");
             printf("    -e, establece el tiempo en segundos que dura la ejecucion (0=infinito). \n");
@@ -124,10 +129,12 @@ void get_system_params(int argc, char **argv)
             printf("    -S, establece el maximo tiempo a dormir. \n");
             printf("    -r, establece el tam maximo de la memoria. \n");
             printf("    -h, muestra la ayuda del sistema. \n");
+            exit(1);
             break;
         case '?':
         default:
             printf("Modo de uso: %s [opciones] \n", argv[0]);
+            exit(1);
         }
     }
 
@@ -152,7 +159,7 @@ int main(int argc, char **argv)
     srand(pthread_self());
 
     if (exec_time > 0) printf("=> Info: duracion maxima en segundos: %d \n", exec_time);
-    else printf("=> Info: no has establecido duracion maxima en segundos.\n");
+    else printf("=> Info: no has establecido duracion maxima en segundos. \n");
 
     make_cpus();
     make_queue();
@@ -172,7 +179,7 @@ int main(int argc, char **argv)
 
     printf("-----------------------------------------------------------------------\n");
     printf("=> Info: %d procesos creados\n", created_threads);
-    printf("=> Info: %d tareas terminadas\n", finished_threads);
+    printf("=> Info: %d procesos terminadas\n", finished_threads);
     printf("=> Info: proceso mas largo: %f segundos\n", max_time);
     printf("=> Info: proceso mas corto: %f segundos\n", min_time);
     printf("-----------------------------------------------------------------------\n");

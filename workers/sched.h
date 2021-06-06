@@ -37,11 +37,10 @@ void *dispatcher()
     {
         if (!q_is_empty())
         {
-            sem_down_t(&q_sem);
             task = q_delete_node();
             sem_up_t(&q_sem);
 
-            printf("[SCD] => (%ld) entra lista espera: | %d, %d | \n", task.pid, task.life, task.priority);
+            printf("[SCD] => (%ld) entra lista espera: | life: %d, prio: %d | \n", task.pid, task.life, task.priority);
             ctxt.pc = task.mm.code;
 
             sem_down_t(&ord_q_sem);
@@ -78,7 +77,7 @@ void scheduler()
 
             if (tcpu.state != STOPPED_TASK && tcpu.task.life > 0)
             {
-                printf("[SCD] => (%ld) a lista de espera, nice: %d\n", tcpu.task.pid, tcpu.quantum);
+                printf("[SCD] => (%ld) vuelve a lista de espera, nice: %d\n", tcpu.task.pid, tcpu.quantum);
                 sem_down_t(&q_sem);
                 priority_q_insert(tcpu.task, tcpu.ctxt, tcpu.task.priority + tcpu.quantum);
                 sem_up_t(&q_sem);

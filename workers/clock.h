@@ -6,6 +6,10 @@
 
 extern void clockphase_cpu();
 
+/**
+ * Representa cada cuantos ciclos se produce la
+ * interrupcion del clock.
+ **/
 int TIMER_T = 100;
 
 extern sem_t cpu_sem, timer_sem;

@@ -56,7 +56,7 @@ void get_system_params(int argc, char **argv)
     {
         char c;
 
-        c = getopt(argc, argv, "e:c:C:t:q:k:p:P:s:S:r:h");
+        c = getopt(argc, argv, "e:c:C:t:q:k:p:P:s:S:r:v:h");
         if (c == -1)
         {
             /* Hemos terminado con todos los argumentos. */
@@ -111,7 +111,7 @@ void get_system_params(int argc, char **argv)
             break;
         case 'v':
             printf("=> Info: modo verbose mem activado. \n");
-            VERBOSE_MEM = 1;
+            VERBOSE_MEM = atoi(optarg);
             break;
         case 'h':
             printf("=> Info: --- HELP --- \n");
@@ -128,6 +128,7 @@ void get_system_params(int argc, char **argv)
             printf("    -s, establece el minimo tiempo a dormir. \n");
             printf("    -S, establece el maximo tiempo a dormir. \n");
             printf("    -r, establece el tam maximo de la memoria. \n");
+            printf("    -v, establece si la memoria se muestra o no (1/0). \n");
             printf("    -h, muestra la ayuda del sistema. \n");
             exit(1);
             break;

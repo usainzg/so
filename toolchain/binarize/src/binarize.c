@@ -105,7 +105,7 @@ int main(int argc, char *argv[])
         
         uint8_t datum;
 
-        // 0 - 5 .text 2E74657874
+        // 0 - 5 => .text 2E74657874
         datum = 0x2E;
         fwrite(&datum, 1, sizeof(uint8_t), f_bin);
         datum = 0x74;
@@ -117,7 +117,7 @@ int main(int argc, char *argv[])
         datum = 0x74;
         fwrite(&datum, 1, sizeof(uint8_t), f_bin);
 
-        // 6 - 11 code[i]
+        // 6 - 11 => code[i]
         for (i = 6; i < 12; i += 2)
         {
             datum = get_hex(code[i]);
@@ -126,9 +126,9 @@ int main(int argc, char *argv[])
             fwrite(&datum, 1, sizeof(uint8_t), f_bin);
         }
 
-        // 7 - 7 \n
+        // 7 - 7 => \n
 
-        // 8 - 13 .data 2E64617661
+        // 8 - 13 => .data 2E64617661
         datum = 0x2E;
         fwrite(&datum, 1, sizeof(uint8_t), f_bin);
         datum = 0x64;
@@ -140,7 +140,7 @@ int main(int argc, char *argv[])
         datum = 0x61;
         fwrite(&datum, 1, sizeof(uint8_t), f_bin);
 
-        // 18 - 14 code[i]
+        // 18 - 14 => code[i]
         for (i = 19; i < 25; i += 2)
         {
             datum = get_hex(code[i]);

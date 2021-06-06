@@ -15,22 +15,26 @@
 
 char *FLD_PROGS = "programs/";
 
+/**
+ * Cantidad maxima/minima de procesos generados de una vez.
+ **/
 int GEN_MAX = 20;
 int GEN_MIN = 10;
+
+/**
+ * Tiempo maximo/minimo de esperar tras generar proceso(s).
+ **/
 int SLP_MAX = 3;
 int SLP_MIN = 1;
 
 int created_threads = 0;
+
 extern int PAGESIZE;
-
-void generate_task(Task *t);
-void new_program(Task *t, const char *file);
-void *process_generator_worker();
-int n_programs();
-char* obten_prog(int id);
-
 extern sem_t q_sem;
 
+/**
+ * Funcion encargada de generar el proceso (tarea).
+ **/
 void generate_task(Task *t)
 {
     t->pid = 1 + rand() % 2500;
@@ -39,6 +43,9 @@ void generate_task(Task *t)
     gettimeofday(&t->start_time, 0);
 }
 
+/**
+ * Funcion encargada de generar el programa.
+ **/
 void new_program(Task *t, const char *file)
 {
     int lines, pages, aloc;
@@ -65,7 +72,7 @@ void new_program(Task *t, const char *file)
 
         // Calcular numero de lineas (se usa luego) y de paginas.
         lines = size - 16;
-        pages = (lines / (int) PAGESIZE) + ((lines % (int) PAGESIZE > 0) ? 1 : 0); // TODO: evitar el modulo???
+        pages = (lines / (int) PAGESIZE) + ((lines % (int) PAGESIZE > 0) ? 1 : 0);
 
         Pages pg;
 
@@ -80,7 +87,7 @@ void new_program(Task *t, const char *file)
                 t->pid = 0;
                 return;
             }
-            pg.physical_d = (unsigned int) aloc; // TODO: hace falta casting???
+            pg.physical_d = (unsigned int) aloc;
             insert_pgb(&(t->mm.pgb), pg);
         }
 
@@ -88,7 +95,9 @@ void new_program(Task *t, const char *file)
         {
             set(i, rom[i + 16], &(t->mm.pgb));
         }
-        t->life = lines; // TODO: preguntar iñaki!
+        
+        // Tiempo de vida = numero de lineas.
+        t->life = lines;
     }
     else
     {

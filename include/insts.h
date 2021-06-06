@@ -126,11 +126,19 @@ void inst_F(Task_cpu *task, Instruction inst)
     printf("[INS] => (%ld) exit\n", task->task.pid);
 }
 
+/**
+ * Array de funciones para poder facilitar la llamada.
+ **/
 Instruction_Table insts[16] = {
     &inst_0, &inst_1, &inst_2, &inst_3, &inst_4, &inst_5, &inst_6, &inst_7, &inst_8, &inst_9, 
     &inst_A, &inst_B, &inst_C, &inst_D, &inst_E, &inst_F
 };
 
+/**
+ * Funcion para obtener el pc contenido en t.pc, calcular el nuevo pc,
+ * generar la estructura Instruction con todos sus campos y llama
+ * a la instruccion correspondiente.
+ **/
 void execute(Task_cpu *t)
 {
     unsigned int inst = get_word(t->ctxt.pc, &(t->task.mm.pgb));

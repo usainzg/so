@@ -134,6 +134,9 @@ void free_pgb(int dF)
     }
 }
 
+/**
+ * Accede a la direccion indicada y escribe el valor (val) indicado.
+ **/
 void set(int addr, uint8_t val, PGB *pgb)
 {
     sem_down_t(&ram_sem);
@@ -141,6 +144,9 @@ void set(int addr, uint8_t val, PGB *pgb)
     sem_up_t(&ram_sem);
 }
 
+/**
+ * Accede a la direccion indicada y devuelve su contenido.
+ **/
 uint8_t get(int addr, PGB *pgb)
 {
     uint8_t ret;
@@ -150,6 +156,10 @@ uint8_t get(int addr, PGB *pgb)
     return ret;
 }
 
+/**
+ * Accede a la direccion indicada y a las tres direcciones siguientes y escribe
+ * el valor indicado.
+ **/
 void set_word(int addr, int val, PGB *pgb)
 {
     int value = val;
@@ -163,6 +173,10 @@ void set_word(int addr, int val, PGB *pgb)
     }
 }
 
+/**
+ * Accede a la direccion indicada y a las tres direcciones siguientes y
+ * devuelve el contenido.
+ **/
 unsigned int get_word(int addr, PGB *pgb)
 {
     unsigned int word = 0;

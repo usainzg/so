@@ -11,7 +11,7 @@
 #define STOPPED_TASK 1
 
 int CPUS = 4;
-int CORES = 6;
+int CORES = 4;
 int THREADS = 4;
 
 Cpu *system_cpus;

@@ -1,20 +1,19 @@
 # so
-Repo para la asignatura de Sistemas Operativos (UPV/EHU).
+Repo para la asignatura de Sistemas Operativos (UPV/EHU). Simulador del Kernel de Linux.
 
-# Uso de la aplicación:
-- -c \<frecuencia en MHz> para elegir frecuencia de reloj del sistema.
-- -t \<periodo en ms> para elegir el periodo de tiempo del timer.
-- -p \<...> para elegir la frecuencia variable del process generator.
-- -C \<n_cpus_per_system> para elegir el número de CPUs del sistema.
-- -O \<n_cores_per_cpu> para elegir el número de cores de las CPU.
-- -T \<n_threads_per_core> para elegir el número de threads por cada core.
-
-En caso de no especificar alguno de los parámetros mediante las opciones listadas, se aplicarán los datos por defecto en los parámetros no seteados.
-
-# Datos por defecto del sistema:
-- Frecuencia del reloj del sistema (clock): 100 MHz
-- Periodo de tiempo del timer: 1 ms
-- Frecuencia del process generator:  
-- Número de CPUs: 1 CPU
-- Número de cores por cada CPU: 1 core.
-- Número de threads por cada core: 1 thread.
+## Modo de uso
+Modo de uso: ./main [opciones]
+Opciones:
+    -e, establece el tiempo en segundos que dura la ejecucion (0=infinito).
+    -c, establece el numero de cores.
+    -C, establece el numero de cpus.
+    -t, establece el numero de threads.
+    -q, establece el tam maximo de la cola.
+    -k, establece la cantidad de ciclos para activar timer.
+    -p, establece el minimo numero de procesos a generar.
+    -P, establece el maximo numero de procesos a generar.
+    -s, establece el minimo tiempo a dormir.
+    -S, establece el maximo tiempo a dormir.
+    -r, establece el tam maximo de la memoria.
+    -v, establece si la memoria se muestra o no (1/0).
+    -h, muestra la ayuda del sistema.
